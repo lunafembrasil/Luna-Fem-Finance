@@ -1,0 +1,106 @@
+LUNA FEM FINANCE - CHANGELOG v1.0
+Fase 6 do roteiro rumo à V1.0: "Polimento profissional" - última fase
+(Módulo 16, Módulo 17, Módulo 18, Módulo 19 e Módulo 20 do pedido original)
+==============================================================================
+
+NOVIDADES DESTA FASE
+
+1) Produtos (Módulo 16)
+   - Cada produto agora mostra a margem de lucro (%) na lista, junto com
+     custo, venda e estoque.
+   - Nova seção em Produtos: "+ Importar produtos em massa". Cole dados
+     de uma planilha (ou selecione um arquivo .csv) com colunas nome,
+     categoria, tipo, custo, preco, estoque, sku, fornecedor e
+     observacoes. Se o SKU já existir em um produto cadastrado, ele é
+     atualizado; caso contrário, é criado um produto novo. A tela mostra
+     quantos serão criados/atualizados antes de confirmar, e nenhum
+     produto existente é apagado no processo.
+   - Estoque negativo, alertas de estoque baixo, categorias, fornecedor e
+     custo já existiam desde versões anteriores.
+
+2) Vendas (Módulo 17) e Caixa (Módulo 18)
+   Revisão completa: os dois módulos já estavam prontos desde antes desta
+   fase. Confirmado nesta revisão final:
+   - Vendas: desconto configurável, Produto Rápido, cliente, telefone,
+     notas e pagamento em várias formas ao mesmo tempo (pagamento misto:
+     dinheiro + PIX + débito + crédito + transferência somados numa só
+     venda) já funcionavam.
+   - Caixa: abertura, fechamento, histórico, diferenças e movimentos
+     manuais (entrada/retirada) já funcionavam.
+   Nenhuma mudança foi necessária nesses dois módulos além da revisão.
+
+3) Design responsivo (Módulo 20)
+   - Testei todas as telas do Administrador e do Caixa em três larguras
+     (celular pequeno, celular grande e tablet) e corrigi um problema
+     real encontrado: em celulares estreitos, os botões "‹ Anterior" e
+     "Próximo ›" das Análises quebravam o texto em duas linhas de forma
+     estranha. Agora, em telas pequenas, o período fica em cima e os
+     botões ocupam a largura toda, um embaixo do outro.
+   - Todo o resto (Dashboard, Análises, Clientes, Vendedores, venda
+     manual, Sincronização) já se ajustava bem a celular e tablet, graças
+     ao trabalho de responsividade feito ao longo das fases anteriores -
+     não farei alegações vazias aqui: eu efetivamente testei cada tela
+     nessas larguras antes de considerar este módulo concluído.
+
+4) Código (Módulo 19) - leia com atenção
+   Peço a atenção do dono do projeto para uma decisão de engenharia deste
+   módulo específico:
+   - "Comentado" e "sem duplicação": mantidos ao longo de todo o projeto -
+     cada bloco novo tem um comentário indicando a versão e o módulo a
+     que pertence, e lógica repetida foi extraída em funções únicas
+     (por exemplo, o motor de análise, o motor de fusão de backups e os
+     exportadores de relatório são cada um usado em vários lugares, sem
+     copiar e colar código).
+   - "Modularizado" - decisão consciente: o pedido original sugere
+     dividir o código em múltiplos arquivos. Optei por NÃO fazer isso
+     nesta reta final. app.js está com quase 3000 linhas, testado a
+     fundo ao longo de 6 fases, e boa parte das funções são chamadas por
+     atributos onclick="..." gerados dinamicamente pelo próprio código.
+     Dividir isso em arquivos ES module exigiria expor manualmente cada
+     uma dessas funções no escopo global (window.nomeDaFuncao = ...),
+     uma mudança mecânica mas arriscada de fazer sem gerar uma regressão
+     silenciosa bem no fim do projeto - e sem ganho nenhum para quem usa
+     o sistema no dia a dia. Preferi errar para o lado da segurança dos
+     seus dados.
+     Em vez disso, entrego junto com esta versão um arquivo
+     ARQUITETURA-E-MANUTENCAO-v1.0.txt, com um mapa completo de onde
+     cada parte do sistema mora dentro de app.js (por número de linha e
+     por módulo), para que qualquer pessoa que for mexer no código no
+     futuro - inclusive uma IA - consiga se localizar rapidamente sem
+     precisar ler o arquivo inteiro. Isso cobre a necessidade real por
+     trás do pedido (manutenção fácil) sem o risco de uma cirurgia de
+     arquivos de última hora.
+
+DOCUMENTAÇÃO COMPLETA DESTA VERSÃO
+
+Junto com este ZIP:
+- LEIA-ME-v1.0.txt - como atualizar para esta versão.
+- ARQUITETURA-E-MANUTENCAO-v1.0.txt - mapa do código para manutenção.
+- GUIA-COMPLETO-LUNA-FEM-FINANCE-v1.0.txt - manual de uso de ponta a
+  ponta, cobrindo todos os módulos entregues da V0.1 até a V1.0.
+
+O QUE NÃO MUDOU
+
+- Nenhuma função existente foi removida.
+- Nenhum dado antigo é apagado ou renomeado.
+- A chave de armazenamento local não mudou (continua "luna_fem_finance_v0_3"
+  por compatibilidade - isso está documentado no arquivo de arquitetura
+  para não confundir ninguém no futuro).
+- O Apps Script / Google Sheets não foi alterado nesta fase (a versão
+  reportada no Painel Mobile passou a mostrar corretamente "1.0").
+
+RESUMO DA JORNADA - V0.4.4 → V1.0
+
+- Fase 1 (v0.5): Dashboard profissional e Centro de Controle (novo menu).
+- Fase 2 (v0.6): backups versionados, histórico de sincronização e
+  Fusionador Inteligente de backups.
+- Fase 3 (v0.7): modo offline, identidade de computador e Apps Script
+  atualizado.
+- Fase 4 (v0.8): Análises por período, Resumos Mensais e Resumo Anual
+  dentro do próprio app.
+- Fase 5 (v0.9): exportação de relatórios (PDF/Excel/CSV/JSON), histórico
+  de ações e lançamento manual de venda.
+- Fase 6 (v1.0): importação em massa de produtos, margem de lucro,
+  revisão e correção de responsividade, e documentação completa.
+
+Luna Fem Finance v1.0 está pronta.

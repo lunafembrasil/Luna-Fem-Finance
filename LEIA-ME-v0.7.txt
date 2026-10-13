@@ -1,0 +1,67 @@
+LUNA FEM FINANCE v0.7 - LEIA-ME / MANUAL DE ATUALIZAÇÃO
+========================================================
+
+O QUE É ESTA VERSÃO
+--------------------
+Fase 3 do roteiro combinado rumo à V1.0: modo offline, identidade de
+computador e atualização do Apps Script. Veja CHANGELOG-v0.7.txt para a
+explicação completa - incluindo um limite importante sobre o que "Multi
+Usuário" significa nesta arquitetura (leia a primeira seção do
+changelog antes de continuar).
+
+COMO ATUALIZAR NO SEU COMPUTADOR
+-----------------------------------
+1. Backup primeiro: Administrador > Backups > "Baixar backup JSON".
+2. Substitua index.html, style.css e app.js pelos desta versão.
+3. Abra o index.html. Seus dados aparecem automaticamente.
+
+COMO ATUALIZAR O APPS SCRIPT (NOVO NESTA VERSÃO)
+----------------------------------------------------
+Diferente das duas fases anteriores, agora o Apps Script mudou. Faça
+isto em cada planilha que vocês já usam como Painel Mobile:
+
+1. Abra a planilha "Luna Fem Finance - Painel Admin" no Google Sheets.
+2. Extensões > Apps Script.
+3. Apague todo o conteúdo do editor.
+4. Cole o conteúdo de apps_script_luna_fem_finance_v0_7.txt (ou .gs).
+5. Salve (ícone de disquete ou Ctrl+S).
+6. Não precisa reimplantar o Web App - a URL continua a mesma.
+7. Na próxima venda, confira se apareceu uma aba nova chamada
+   "Dispositivos" na planilha.
+
+Se vocês usam mais de um computador com o mesmo Painel Mobile, repita a
+troca do Apps Script só uma vez (é a mesma planilha para todos - não
+precisa fazer isso em cada computador, só uma vez na planilha).
+
+NOVIDADES QUE VOCÊ VAI NOTAR
+-------------------------------
+- Uma bolinha "Online" ou "Offline" no topo da tela.
+- Em Configurações, um campo para nomear este computador (ex.: "Caixa 1 -
+  Frente"). Recomendado preencher em cada computador que usar o sistema.
+- Em Sincronização, um resumo de "Este computador" e um botão para
+  verificar se há backup de outra máquina na pasta do Drive.
+- Na planilha do Google Sheets, a aba "Dispositivos" (nova) e a aba
+  "Logs" agora mostrando de qual computador veio cada sincronização.
+
+SE VOCÊS USAM MAIS DE UM COMPUTADOR
+--------------------------------------
+Recomendado:
+1. Nomeie cada computador em Configurações (ex.: "Caixa 1", "Caixa 2").
+2. Configure a MESMA pasta do Google Drive (compartilhada) em todos eles,
+   em Sincronização.
+3. De vez em quando (por exemplo, no fechamento do dia), clique em
+   "Verificar backups de outras máquinas agora" em cada computador. Isso
+   traz para aquele computador as vendas que só existiam no outro, sem
+   duplicar nada.
+4. Se preferir fazer isso manualmente com os arquivos de backup, o
+   Fusionador Inteligente (Administrador > Ferramentas) continua
+   disponível, como na Fase 2.
+
+O CAIXA (TELA DE VENDA) MUDOU?
+--------------------------------
+Só ganhou o indicador Online/Offline no topo. O resto continua igual.
+
+SE ALGO DER ERRADO
+-------------------
+Restaure o backup salvo no passo 1 e me avise para eu corrigir antes de
+continuar para a próxima fase.

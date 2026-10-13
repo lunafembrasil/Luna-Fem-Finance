@@ -1,0 +1,63 @@
+LUNA FEM FINANCE v0.2
+
+NOVIDADES DA v0.2:
+- Ícone atualizado com o novo logo da Luna Fem Finance.
+- Seleção de vendedor por número no carrinho:
+  1 = Agustín
+  2 = Natalia
+  3 = Karol
+- Cada venda agora guarda número e nome do vendedor.
+- Relatório por vendedor para facilitar cálculo de comissão.
+- CSV exporta vendedor_numero e vendedor_nome.
+
+COMO ABRIR:
+1. Clique duas vezes em index.html.
+2. A app vai abrir no navegador.
+3. Login Caixa: use a senha cadastrada
+4. Login Administrador: use a senha cadastrada
+
+RECOMENDAÇÃO PARA ATUALIZAR DA v0.1:
+1. Abra a versão 0.1.
+2. Entre como Administrador.
+3. Vá em Backup.
+4. Baixe o backup JSON.
+5. Abra a versão 0.2.
+6. Entre como Administrador.
+7. Vá em Backup e restaure o backup JSON.
+8. Teste se produtos, vendas e caixa apareceram corretamente.
+
+IMPORTANTE:
+- Esta é uma versão local de teste.
+- Os dados ficam salvos no navegador da computadora.
+- Faça backup todos os dias.
+- Não limpe os dados do navegador enquanto estiver usando a app.
+
+SEGURANÇA v0.2.1:
+- As senhas não aparecem mais na tela inicial.
+- Evite compartilhar a pasta completa da app com pessoas que não sejam administradores.
+
+
+ATUALIZAÇÃO v0.3.1:
+- Produto rápido liberado para Caixa.
+- Produtos criados pelo Caixa ficam pendentes de revisão pelo Administrador.
+
+
+ATUALIZAÇÃO v0.3.2:
+- Backup automático silencioso depois de cada venda finalizada no Caixa.
+- Requer pasta Google Drive previamente configurada pelo Administrador.
+
+
+ATUALIZAÇÃO v0.4:
+- Adicionado Painel Mobile com sincronização para Google Sheets via Apps Script.
+
+
+ATUALIZAÇÃO v0.4.1:
+- Desconto de 0% a 80% no Caixa.
+- Relatórios, CSV e payload mobile agora incluem subtotal/desconto/total final.
+
+
+ATUALIZAÇÃO v0.4.2:
+- Análises no Painel Mobile.
+- Eliminar produto no Administrador.
+- Abertura de caixa com backup/sync automático.
+- Permite venda sem estoque.

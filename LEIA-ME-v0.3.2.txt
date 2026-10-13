@@ -1,0 +1,51 @@
+LUNA FEM FINANCE v0.3.2
+
+NOVIDADE PRINCIPAL:
+- Backup automático depois de cada venda finalizada no Caixa.
+- O botão "Finalizar venda" continua igual.
+- Depois que o Administrador configurar a pasta Google Drive, cada venda finalizada atualiza automaticamente:
+  1. auto-backup-luna-fem-finance-AAAA-MM-DD.json
+  2. ultimo-backup-luna-fem-finance.json
+
+COMO FUNCIONA:
+- O Caixa finaliza a venda normalmente.
+- A venda é salva na computadora.
+- Em seguida, a app tenta salvar uma cópia automática na pasta do Google Drive.
+- Se a pasta não estiver configurada, a venda não é travada.
+- Se o navegador não tiver permissão, a venda não é travada.
+- O Administrador pode revisar o status em Nuvem / Google Drive.
+
+ATUALIZAR DA v0.3.1:
+1. Abra a v0.3.1.
+2. Entre como Administrador.
+3. Faça backup JSON.
+4. Feche a app.
+5. Baixe e extraia a v0.3.2 em uma nova pasta.
+6. Abra index.html da v0.3.2.
+7. Entre como Administrador.
+8. Restaure o backup JSON.
+9. Vá em Nuvem / Google Drive.
+10. Escolha novamente a pasta Backups do Google Drive se necessário.
+11. Faça uma venda de teste no Caixa.
+12. Volte ao Google Drive e confira se foi criado/atualizado o arquivo auto-backup-luna-fem-finance-AAAA-MM-DD.json.
+
+IMPORTANTE:
+- Esta versão continua sendo local.
+- O backup automático funciona com a app aberta.
+- Para backup automático mesmo com a app fechada, será preciso empacotar como app de desktop no futuro.
+
+
+ATUALIZAÇÃO v0.4:
+- Adicionado Painel Mobile com sincronização para Google Sheets via Apps Script.
+
+
+ATUALIZAÇÃO v0.4.1:
+- Desconto de 0% a 80% no Caixa.
+- Relatórios, CSV e payload mobile agora incluem subtotal/desconto/total final.
+
+
+ATUALIZAÇÃO v0.4.2:
+- Análises no Painel Mobile.
+- Eliminar produto no Administrador.
+- Abertura de caixa com backup/sync automático.
+- Permite venda sem estoque.

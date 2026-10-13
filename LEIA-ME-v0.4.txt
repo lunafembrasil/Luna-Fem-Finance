@@ -1,0 +1,30 @@
+LUNA FEM FINANCE v0.4
+
+NOVIDADES:
+- Nova aba no Administrador: Painel Mobile.
+- Sincronização com Google Sheets via Google Apps Script.
+- Depois de cada venda, a app tenta atualizar o painel do celular automaticamente.
+- Botão de sincronização manual.
+- Envia resumo do dia, vendas, vendedores, caixa, produtos pendentes e estoque baixo.
+
+ARQUIVOS IMPORTANTES:
+- index.html: app Luna Fem Finance.
+- apps_script_luna_fem_finance_v0_4.gs: código para colar no Google Apps Script.
+- GUIA_PAINEL_MOBILE_v0_4.txt: passo a passo completo.
+
+SEGURANÇA:
+- O painel usa uma chave secreta.
+- O celular é somente para consulta.
+- A caixa principal continua na computadora da loja.
+
+
+ATUALIZAÇÃO v0.4.1:
+- Desconto de 0% a 80% no Caixa.
+- Relatórios, CSV e payload mobile agora incluem subtotal/desconto/total final.
+
+
+ATUALIZAÇÃO v0.4.2:
+- Análises no Painel Mobile.
+- Eliminar produto no Administrador.
+- Abertura de caixa com backup/sync automático.
+- Permite venda sem estoque.

@@ -1,0 +1,37 @@
+LUNA FEM FINANCE v0.3.3
+
+NOVIDADES:
+1. Relatórios agora mostram data e hora de cada venda.
+2. Relatório CSV agora exporta data, hora e data_hora.
+3. No login Caixa aparece o controle de Caixa do dia:
+   - abrir caixa informando quanto dinheiro há no início;
+   - fechar caixa informando quanto dinheiro foi contado no final;
+   - salvar histórico de abertura e fechamento.
+4. O histórico de caixa aparece nos Relatórios.
+5. O fechamento calcula valor inicial, dinheiro esperado, valor contado e diferença.
+
+ATUALIZAR DA v0.3.2:
+1. Abra a v0.3.2.
+2. Entre como Administrador.
+3. Faça backup JSON.
+4. Baixe e extraia a v0.3.3 em uma nova pasta.
+5. Abra index.html da v0.3.3.
+6. Entre como Administrador.
+7. Restaure o backup JSON.
+8. Configure novamente a pasta Google Drive se necessário.
+
+
+ATUALIZAÇÃO v0.4:
+- Adicionado Painel Mobile com sincronização para Google Sheets via Apps Script.
+
+
+ATUALIZAÇÃO v0.4.1:
+- Desconto de 0% a 80% no Caixa.
+- Relatórios, CSV e payload mobile agora incluem subtotal/desconto/total final.
+
+
+ATUALIZAÇÃO v0.4.2:
+- Análises no Painel Mobile.
+- Eliminar produto no Administrador.
+- Abertura de caixa com backup/sync automático.
+- Permite venda sem estoque.

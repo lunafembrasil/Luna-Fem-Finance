@@ -1,0 +1,47 @@
+LUNA FEM FINANCE v0.4.3
+
+NOVIDADE PRINCIPAL:
+- Adicionado período QUINZENAL no Painel Mobile.
+- Ordem dos períodos:
+  1. Semanal
+  2. Quinzenal
+  3. Mensal
+  4. Trimestral
+  5. Semestral
+  6. Anual
+
+COMO FUNCIONA A QUINZENA:
+- Do dia 1 ao dia 15.
+- Do dia 16 até o último dia do mês.
+- O painel mostra o período atual até a data de hoje.
+
+NOVAS FUNÇÕES NO GOOGLE SHEETS:
+- A aba "Análises" passa a mostrar o período Quinzenal.
+- A aba "Análises Vendedores" passa a mostrar vendas por vendedor na quinzena.
+- Nova aba: "Quinzenal Vendedores".
+- Nova aba: "Config Comissões".
+
+CONFIGURAÇÃO DE COMISSÃO:
+1. Abra a aba "Config Comissões".
+2. Edite apenas a coluna "Comissão %".
+3. Exemplo: coloque 5 para comissão de 5%.
+4. A aba "Quinzenal Vendedores" calcula automaticamente:
+   Total vendido x Comissão %.
+
+ATUALIZAR APPS SCRIPT:
+1. Abra Google Sheets > Extensões > Apps Script.
+2. Apague todo o código anterior.
+3. Cole TODO o conteúdo de:
+   apps_script_luna_fem_finance_v0_4_3_COMPATIBLE.txt
+4. Salve.
+5. Faça Nova implantação como Aplicativo da Web.
+6. Copie a nova URL.
+7. Cole na app em Administrador > Painel Mobile.
+8. Clique em Testar conexão e Sincronizar agora.
+
+ATUALIZAR A APP:
+1. Faça Backup JSON da versão atual.
+2. Extraia Luna Fem Finance v0.4.3 em uma pasta nova.
+3. Abra index.html.
+4. Restaure o Backup JSON.
+5. Reconfigure Google Drive e Painel Mobile se necessário.

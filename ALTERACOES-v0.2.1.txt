@@ -1,0 +1,9 @@
+Luna Fem Finance v0.2.1
+
+Alteração principal:
+- Removidas as senhas visíveis da tela de login.
+- Agora aparece apenas: Acesso restrito · Senha protegida.
+- README ajustado para não exibir as senhas.
+
+Observação técnica:
+- Esta ainda é uma versão local de teste. Para segurança profissional, a próxima etapa será empacotar a app e proteger melhor as credenciais.

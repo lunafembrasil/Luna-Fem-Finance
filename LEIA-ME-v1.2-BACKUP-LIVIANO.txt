@@ -1,0 +1,6 @@
+Luna Fem Finance V1.2 — Backup leve\n\nO backup leve inclui settings, vendedores, categorias, produtos e vendas. Exclui cashHistory, cashSessions e históricos de auditoria/sincronização, que são os dados que fazem o arquivo crescer de ~400 KB para vários MB.\n\nO backup completo continua disponível para emergências. Ao restaurar um backup leve, os históricos locais de caixa e auditoria são preservados.\n
+
+V1.3 - Otimização de desempenho
+- Renderização por aba: a aplicação não reconstrói relatórios e históricos de todas as telas a cada ação.
+- Histórico de Caixa e sessões: interface mostra os 120 registros mais recentes; todos os dados continuam preservados no IndexedDB.
+- Backup leve permanece com vendas, produtos, vendedores, categorias e configurações.

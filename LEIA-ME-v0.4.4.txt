@@ -1,0 +1,70 @@
+LUNA FEM FINANCE v0.4.4
+
+NOVIDADES:
+
+1. AS DUAS QUINZENAS
+- 1ª Quinzena: dia 1 ao dia 15.
+- 2ª Quinzena: dia 16 ao último dia do mês.
+- As duas ficam juntas na aba "Quinzenal Vendedores".
+- Há espaços entre os blocos para melhorar a leitura.
+
+2. ANÁLISES MAIS VISUAIS
+A aba "Análises" agora mostra, com espaços:
+- Semanal
+- 1ª Quinzena
+- 2ª Quinzena
+- Mensal
+- Trimestral
+- Semestral
+- Anual
+
+3. UMA ÚNICA ABA DE MESES
+- A aba se chama "Resumos Mensais".
+- Não será criada uma aba diferente para cada mês.
+- Cada mês concluído é adicionado dentro da mesma aba.
+- O mês mais novo aparece no topo.
+- Há espaços entre os meses e entre cada seção.
+
+Cada mês inclui:
+- resumo geral;
+- primeira e segunda quinzena;
+- formas de pagamento;
+- vendas por vendedor;
+- comissão estimada;
+- caixa;
+- produtos mais vendidos;
+- vendas canceladas no total geral.
+
+4. RESUMO ANUAL
+- Quando começar um novo ano, será criada automaticamente uma aba do ano concluído.
+- Exemplo: em janeiro de 2027 será criada:
+  Resumo 2026 LFB
+- O resumo anual é dinâmico e será recalculado se alguma venda antiga for corrigida.
+
+5. OPÇÃO A - DINÂMICA
+- Os resumos não ficam congelados.
+- Se cancelar uma venda antiga, corrigir custo ou restaurar dados, os valores são recalculados na próxima sincronização.
+
+ATUALIZAR A APP:
+1. Faça Backup JSON na versão atual.
+2. Extraia Luna Fem Finance v0.4.4 em uma pasta nova.
+3. Abra index.html.
+4. Restaure o Backup JSON.
+5. Reconfigure Google Drive e Painel Mobile se necessário.
+
+ATUALIZAR APPS SCRIPT:
+1. Abra Google Sheets > Extensões > Apps Script.
+2. Apague todo o código anterior.
+3. Cole TODO o conteúdo de:
+   apps_script_luna_fem_finance_v0_4_4_COMPATIBLE.txt
+4. Salve.
+5. Faça Nova implantação como Aplicativo da Web.
+6. Copie a nova URL.
+7. Cole na app em Administrador > Painel Mobile.
+8. Clique em Testar conexão.
+9. Clique em Sincronizar agora.
+
+IMPORTANTE:
+- A aba "Resumos Mensais" só mostra meses já concluídos.
+- Enquanto junho estiver em andamento, junho ainda não aparece como mês fechado.
+- Ao iniciar julho e sincronizar, "Resumo Junho 2026" aparecerá no topo.

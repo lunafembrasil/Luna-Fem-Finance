@@ -1,0 +1,10 @@
+LUNA FEM FINANCE V1.1 — CORREÇÃO CRÍTICA
+
+Esta versão mantém a lógica original da V1.0 e corrige apenas o armazenamento do banco: o estado completo passa para IndexedDB.
+
+IMPORTANTE: o backup fusionado foi incluído como BACKUP-FUSIONADO-RESTAURAR.json.
+Senhas presentes nesse backup:
+- Caixa: 0000
+- Administrador: 202320
+
+Primeiro abra index.html. Se a tela entrar, use uma das senhas acima. Depois, no Administrador, use Restaurar Backup e selecione o arquivo BACKUP-FUSIONADO-RESTAURAR.json.

@@ -1,0 +1,63 @@
+LUNA FEM FINANCE - CHANGELOG v0.9
+Fase 5 do roteiro rumo à V1.0: "Gestão completa"
+(Módulo 14 e Módulo 15 do pedido original, + 1 pedido novo do dono da loja)
+==============================================================================
+
+NOVIDADES
+
+1) Exportação de relatórios em PDF, Excel, CSV e JSON (Módulo 15)
+   - Em Relatórios, além do CSV que já existia, agora tem botões para
+     Excel, PDF e JSON com as mesmas vendas.
+   - Em Análises > Por período, um botão de exportar aparece logo abaixo
+     da navegação - exporta exatamente o período que está sendo
+     visualizado (o mês atual, o trimestre escolhido, etc.), nos mesmos
+     4 formatos.
+   - PDF usa a função de impressão do próprio navegador ("Salvar como
+     PDF" na janela de impressão) e Excel usa uma tabela que o Excel
+     reconhece diretamente - escolhemos esse caminho de propósito para
+     não depender de nenhuma biblioteca externa nem de internet, já que
+     o app precisa continuar funcionando 100% offline.
+
+2) Histórico de ações (Módulo 14)
+   - Nova seção em Configurações: registra produto criado/editado/
+     excluído, venda cancelada, vendedor criado/editado/ativado/
+     desativado, senha alterada (sem mostrar a senha em si), regras
+     alteradas e tentativas de login com senha errada.
+   - As confirmações antes de excluir produto e cancelar venda já
+     existiam desde a v0.4.2 e continuam funcionando como antes - esta
+     versão só adicionou o registro dessas ações.
+
+3) Lançamento manual de venda (pedido durante esta fase)
+   - Em Vendas, um novo painel "+ Lançar venda manual" para registrar
+     vendas esquecidas ou feitas fora do Caixa (por telefone, por
+     exemplo): escolha a data e hora, o vendedor, os produtos e a forma
+     de pagamento.
+   - Propositalmente mais simples que o Caixa (sem pagamento misto ou
+     parcelamento) - é para lançamentos ocasionais, não para o dia a
+     dia de vendas.
+   - Não permite datas no futuro.
+   - A venda lançada manualmente entra exatamente como qualquer outra:
+     aparece no Dashboard, nas Análises, nos Resumos Mensais/Anual, em
+     Clientes, e é salva e respaldada da mesma forma (backup automático
+     no Drive e sincronização com o Painel Mobile). Fica marcada com a
+     etiqueta "Manual" na lista de vendas, só para diferenciar visualmente
+     de onde ela veio.
+   - Fica registrada no Histórico de ações.
+
+CORREÇÃO
+
+- "Salvar senhas" em Configurações não atualizava a tela depois de
+  salvar (o Histórico de ações só aparecia atualizado depois de trocar
+  de aba). Corrigido.
+
+O QUE NÃO MUDOU
+
+- Nenhuma função existente foi removida.
+- Nenhum dado antigo é apagado ou renomeado.
+- O Apps Script / Google Sheets não foi alterado nesta fase.
+
+PRÓXIMA FASE RUMO À V1.0
+
+- Fase 6 (v1.0): refinamentos finais de produtos/vendas/caixa, design
+  responsivo para tablet/celular, revisão geral do código e
+  documentação completa - a última fase antes da versão 1.0.

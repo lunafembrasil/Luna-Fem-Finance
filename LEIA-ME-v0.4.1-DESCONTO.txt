@@ -1,0 +1,41 @@
+LUNA FEM FINANCE v0.4.1 - DESCONTO
+
+NOVIDADE:
+- No Caixa, o vendedor pode escolher desconto de 0% até 80%.
+- O valor padrão é 0%.
+- O desconto aparece antes de finalizar a venda.
+- A venda registra:
+  subtotal,
+  desconto percentual,
+  desconto em R$,
+  total final.
+- Relatórios e CSV passam a incluir desconto.
+
+COMO TESTAR:
+1. Abra a app v0.4.1.
+2. Entre como Caixa.
+3. Adicione produto ao carrinho.
+4. Em "Desconto para o cliente", coloque 10.
+5. Confira subtotal, desconto e total final.
+6. Finalize a venda.
+7. Entre como Administrador.
+8. Veja Relatórios e Vendas.
+
+ATENÇÃO:
+- O desconto máximo permitido é 80%.
+- Se tentar colocar mais de 80, a app corrige automaticamente para 80.
+- Após finalizar venda, o campo volta para 0%.
+
+PAINEL MOBILE:
+A app envia subtotal, desconto e total final para o Painel Mobile.
+Para que o Google Sheets mostre as novas colunas de desconto, atualize o Apps Script com:
+apps_script_luna_fem_finance_v0_4_1_DESCONTO_COMPATIBLE.txt
+
+Se não atualizar o Apps Script, a app continua funcionando, mas a planilha pode não mostrar as colunas novas de desconto.
+
+
+ATUALIZAÇÃO v0.4.2:
+- Análises no Painel Mobile.
+- Eliminar produto no Administrador.
+- Abertura de caixa com backup/sync automático.
+- Permite venda sem estoque.

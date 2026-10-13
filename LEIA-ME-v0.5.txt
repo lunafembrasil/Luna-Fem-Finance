@@ -1,0 +1,59 @@
+LUNA FEM FINANCE v0.5 - LEIA-ME / MANUAL DE ATUALIZAÇÃO
+========================================================
+
+O QUE É ESTA VERSÃO
+--------------------
+Esta é a Fase 1 do roteiro combinado para chegar à V1.0 (veja o
+CHANGELOG-v0.5.txt para a lista completa de novidades). As próximas
+fases continuam em versões futuras (v0.6, v0.7... até v1.0), cada uma
+testada e entregue separadamente, para nunca colocar em risco os dados
+reais da loja.
+
+COMO ATUALIZAR NO SEU COMPUTADOR
+---------------------------------
+1. Antes de qualquer coisa, faça um backup:
+   Administrador > Backups > "Baixar backup JSON"
+   Guarde esse arquivo em local seguro (pendrive ou Google Drive).
+
+2. Substitua os arquivos antigos pelos novos desta versão:
+   index.html, style.css, app.js
+   (O arquivo apps_script...gs NÃO muda nesta versão - pode manter o
+   que você já tem no Google Sheets.)
+
+3. Abra o index.html normalmente no navegador.
+
+4. Seus dados aparecem automaticamente. Não é preciso restaurar backup
+   manualmente - o sistema já lê o que está salvo no navegador.
+   (Se por algum motivo quiser restaurar o backup baixado no passo 1,
+   agora o processo de restauração também atualiza os dados
+   automaticamente para o novo formato.)
+
+O QUE VOCÊ VAI NOTAR DE DIFERENTE
+----------------------------------
+- Um novo menu lateral no Administrador (Centro de Controle), com Início,
+  Dashboard, Vendas, Caixa, Produtos, Clientes, Vendedores, Relatórios,
+  Backups, Sincronização e Configurações.
+- O Painel (Dashboard) agora mostra bem mais informação, organizada em
+  blocos: Hoje / Operação / Vendedores e comissões / Médias históricas.
+- Duas telas novas: Clientes e Vendedores.
+- Uma tela nova de Configurações, onde dá pra trocar as senhas de acesso
+  e ajustar o alerta de estoque baixo e o desconto máximo - sem precisar
+  mexer no código.
+
+O QUE PRECISA DE ATENÇÃO NA VENDEDORES
+----------------------------------------
+A comissão % que você cadastrar em Vendedores é uma estimativa local,
+mostrada só no Dashboard do app. Ela ainda NÃO substitui a comissão que
+você edita na planilha "Config Comissões" do Google Sheets - as duas
+coisas vão ser unificadas na Fase 3. Até lá, trate-as como dois números
+independentes.
+
+O CAIXA (TELA DE VENDA) MUDOU?
+--------------------------------
+Não. A tela do Caixa continua exatamente igual. O novo menu lateral
+existe só para o Administrador.
+
+SE ALGO DER ERRADO
+-------------------
+Restaure o backup salvo no passo 1 (Administrador > Backups > Restaurar
+backup JSON) e me avise para eu corrigir antes de tentar de novo.

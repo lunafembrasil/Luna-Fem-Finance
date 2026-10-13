@@ -1,0 +1,54 @@
+LUNA FEM FINANCE v0.9 - LEIA-ME / MANUAL DE ATUALIZAÇÃO
+========================================================
+
+O QUE É ESTA VERSÃO
+--------------------
+Fase 5 do roteiro combinado rumo à V1.0: exportação de relatórios,
+histórico de ações e lançamento manual de venda. Veja
+CHANGELOG-v0.9.txt para a lista completa.
+
+COMO ATUALIZAR
+--------------
+1. Backup primeiro: Administrador > Backups > "Baixar backup JSON".
+2. Substitua index.html, style.css e app.js pelos desta versão.
+3. Abra o index.html. Seus dados aparecem automaticamente.
+4. O Apps Script não muda nesta versão.
+
+COMO LANÇAR UMA VENDA MANUAL (novidade)
+------------------------------------------
+1. Administrador > Vendas > "+ Lançar venda manual" (clique para abrir).
+2. Preencha a data e hora da venda, escolha o vendedor.
+3. Busque e adicione os produtos (mesma lógica do Caixa: clique para
+   adicionar, ajuste a quantidade se precisar).
+4. Escolha a forma de pagamento e, se for o caso, o desconto.
+5. "Registrar venda manual".
+
+A venda entra no sistema exatamente como qualquer outra - conta para o
+Dashboard, as Análises, os Resumos e os Clientes, e é salva e
+respaldada normalmente. Ela aparece com a etiqueta "Manual" na lista de
+vendas, só para vocês saberem de onde veio.
+
+COMO EXPORTAR RELATÓRIOS EM PDF/EXCEL/CSV/JSON (novidade)
+--------------------------------------------------------------
+- Em Relatórios: os botões estão logo acima da lista de vendas
+  detalhadas.
+- Em Análises > Por período: os botões aparecem abaixo das setas de
+  navegação, e exportam o período que estiver na tela.
+- O PDF abre a janela de impressão do navegador - escolha "Salvar como
+  PDF" no destino da impressão.
+- O Excel baixa um arquivo .xls que abre direto no Microsoft Excel.
+
+ONDE VER O HISTÓRICO DE AÇÕES (novidade)
+--------------------------------------------
+Administrador > Configurações > final da página. Mostra produtos
+criados/editados/excluídos, vendas canceladas, vendedores alterados,
+senhas trocadas e tentativas de login com senha errada.
+
+O CAIXA (TELA DE VENDA) MUDOU?
+--------------------------------
+Não. Todas as novidades desta fase são só para o Administrador.
+
+SE ALGO DER ERRADO
+-------------------
+Restaure o backup salvo no passo 1 e me avise para eu corrigir antes de
+continuar para a Fase 6 (a última antes da V1.0).

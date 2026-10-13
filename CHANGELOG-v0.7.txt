@@ -1,0 +1,85 @@
+LUNA FEM FINANCE - CHANGELOG v0.7
+Fase 3 do roteiro rumo à V1.0: "Operação em rede"
+(Módulo 9, Módulo 10, Módulo 11 e Módulo 12 do pedido original)
+==============================================================================
+
+LEIA PRIMEIRO - UM LIMITE HONESTO SOBRE "MULTI USUÁRIO"
+----------------------------------------------------------
+O pedido original descreve Multi Usuário como "várias computadoras, várias
+caixas, mesma base, sem duplicar informação" - o que, lido ao pé da letra,
+sugere duas caixas vendo a mesma venda em tempo real, como um sistema com
+servidor central. Isso exigiria um servidor de verdade (banco de dados
+compartilhado, não HTML+JavaScript+localStorage) - seria um projeto
+diferente, não mais uma fase.
+
+O que esta versão entrega, dentro da arquitetura atual (que é
+propositalmente offline, sem servidor): cada computador funciona de forma
+independente, e a reconciliação entre eles acontece por sincronização
+(usando o Fusionador Inteligente da Fase 2), não em tempo real. É "multi
+computador por reconciliação", não "multi usuário ao vivo". Se no futuro
+vocês quiserem o modelo ao vivo, é uma conversa à parte sobre construir um
+backend - vale a pena ter clareza disso antes de continuar.
+
+NOVIDADES
+
+1) Modo Offline (Módulo 9)
+   - As vendas já ficavam salvas localmente mesmo sem internet - isso não
+     mudou e continua sendo a base de tudo.
+   - Novo indicador no topo da tela: "Online" ou "Offline", em tempo real.
+   - Se uma venda acontecer sem internet, a tentativa de atualizar o
+     Painel Mobile (Google Sheets) fica marcada como pendente. Assim que a
+     internet voltar, o sistema tenta de novo automaticamente - sem
+     precisar reabrir o app nem clicar em nada.
+   - O backup no Google Drive não depende de internet (é escrita local na
+     pasta sincronizada pelo Google Drive Desktop), então já funcionava
+     offline - isso está documentado agora com mais clareza.
+
+2) Identidade de computador / Multi computador (Módulo 10)
+   - Em Configurações, dá pra dar um nome a cada computador (ex.: "Caixa 1
+     - Frente"). Esse nome fica só naquele navegador.
+   - Toda venda agora registra de qual computador ela veio.
+   - Novo botão em Sincronização: "Verificar backups de outras máquinas
+     agora" - reconcilia com a pasta do Drive sob demanda, sem precisar
+     reconfigurar a pasta do zero (usa o mesmo motor do Módulo 7 da Fase
+     2).
+
+3) Múltiplas contas Google (Módulo 11)
+   - Na prática, isso já funcionava: a sincronização com o Google Sheets
+     usa uma URL + uma chave secreta (não pede login), então qualquer
+     computador pode sincronizar para a mesma planilha, não importa qual
+     conta Google está logada nele. A pasta do Google Drive só precisa
+     estar compartilhada com quem for usá-la. O texto explicando isso
+     agora aparece direto na tela de Sincronização.
+
+4) Google Sheets - Apps Script atualizado (Módulo 12)
+   - A aba "Logs" agora também mostra de qual computador veio cada
+     sincronização, e a versão certa do app (antes estava fixa em
+     "0.4.4").
+   - Nova aba "Dispositivos": uma linha por computador que já sincronizou,
+     sempre atualizada (não duplica), mostrando a última sincronização e
+     quantas vendas cada um já enviou. Dá uma visão rápida de quantas
+     caixas estão ativas.
+   - Todas as abas que já existiam (Resumo do Dia, Análises, Análises
+     Vendedores, Análises Pagamentos, Quinzenal Vendedores, Resumos
+     Mensais, Resumo AAAA LFB, Config Comissões) continuam exatamente como
+     estavam - essa parte já estava completa desde a v0.4.4 e não
+     precisava ser refeita.
+
+IMPORTANTE - ESTA VERSÃO MEXE NO APPS SCRIPT
+
+Diferente das Fases 1 e 2, desta vez o Apps Script mudou. Veja o
+LEIA-ME-v0.7.txt para o passo a passo de atualização na planilha.
+
+O QUE NÃO MUDOU
+
+- Nenhuma função existente foi removida.
+- Nenhum dado antigo é apagado ou renomeado.
+- A chave de armazenamento local não mudou.
+
+PRÓXIMAS FASES RUMO À V1.0
+
+- Fase 4 (v0.8): análises (diária, semanal, quinzenas, mensal, trimestral,
+  semestral, anual) dentro do próprio app - hoje só existem no Sheets.
+- Fase 5 (v0.9): exportação PDF/Excel/CSV/JSON, auditoria/segurança.
+- Fase 6 (v1.0): refinamentos finais de produtos/vendas/caixa, design
+  responsivo e documentação completa.

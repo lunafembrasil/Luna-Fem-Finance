@@ -1,0 +1,79 @@
+LUNA FEM FINANCE - CHANGELOG v0.6
+Fase 2 do roteiro rumo à V1.0: "Blindagem de dados"
+(Módulo 6, Módulo 7, Módulo 8 e Módulo 13 do pedido original)
+==============================================================================
+
+NOVIDADES
+
+1) Fusionador Inteligente de Backups (Módulo 6)
+   - Novo item de menu: Ferramentas.
+   - Selecione um Backup Principal e um Backup Secundário (dois arquivos
+     .json baixados anteriormente). O sistema analisa os dois e mostra
+     quantos produtos, vendas, movimentos de caixa, vendedores e
+     categorias são novos - e quantos já existem em ambos.
+   - Nada é duplicado: cada registro é identificado pelo seu ID único.
+     Nenhuma venda, produto ou movimento de caixa é apagado.
+   - Em caso de conflito (por exemplo, o mesmo produto com preços
+     diferentes nos dois arquivos), o Backup Principal sempre prevalece,
+     e o conflito aparece contado na análise para você revisar.
+   - Depois de analisar, você pode baixar o "Backup Fusionado" ou
+     aplicá-lo direto como os dados deste computador.
+   - Funciona mesmo fundindo backups de versões diferentes (de v0.1 até
+     hoje) - cada arquivo passa pela mesma migração automática usada ao
+     abrir o app.
+
+2) Backups sempre versionados (Módulo 13)
+   - O backup local (botão "Baixar backup JSON") agora inclui data E
+     hora no nome do arquivo, assim como o backup do Google Drive já
+     fazia. Isso evita que dois backups baixados no mesmo dia se
+     sobrescrevam.
+   - O backup automático do Google Drive (um arquivo por dia + o
+     ponteiro "último backup") continua como já funcionava - isso já
+     garantia que nenhum dia fosse perdido.
+
+3) Histórico de sincronização (Módulo 8)
+   - Nova seção dentro de Sincronização: registra cada backup local,
+     backup no Google Drive, sincronização com o Painel Mobile e fusão
+     de backups - com data, hora, usuário (Administrador/Caixa) e
+     resultado (sucesso ou erro).
+   - Para não virar uma lista infinita, os backups e sincronizações
+     automáticas (as que acontecem sozinhas a cada venda) só entram no
+     histórico uma vez por dia por tipo - e sempre que houver erro. Ações
+     manuais (clicou em um botão) sempre aparecem.
+   - Botão para limpar o histórico quando quiser.
+
+4) Sincronização inteligente ao configurar a pasta do Drive (Módulo 7)
+   - Ao escolher a pasta do Google Drive, o sistema agora verifica se já
+     existe um backup ali (por exemplo, salvo por outro computador da
+     loja). Se encontrar vendas que não estão neste computador, ele
+     avisa e oferece fundir automaticamente (usando o mesmo motor do
+     Fusionador Inteligente) em vez de simplesmente sobrescrever depois.
+   - Esse é o ponto realista, com a arquitetura de hoje, para "não
+     sobrescrever informação": a checagem contínua entre vários
+     computadores ao mesmo tempo é o que a Fase 3 (Multi Usuário) vai
+     construir em cima disso.
+
+CORREÇÃO
+
+- Ao aplicar um backup fusionado pela tela de Ferramentas, o usuário
+  logado (Administrador) deixava de aparecer corretamente no histórico
+  logo em seguida, porque o arquivo carregado sobrescrevia essa
+  informação. Corrigido: a sessão atual é sempre preservada.
+
+O QUE NÃO MUDOU
+
+- Nenhuma função existente foi removida.
+- Nenhum dado antigo é apagado ou renomeado.
+- A chave de armazenamento local não mudou.
+- O Apps Script / Google Sheets não foi alterado nesta fase.
+
+PRÓXIMAS FASES RUMO À V1.0
+
+- Fase 3 (v0.7): modo offline, multi usuário, multi conta Google, Apps
+  Script reescrito - construído em cima do Fusionador Inteligente desta
+  versão.
+- Fase 4 (v0.8): análises (diária, semanal, quinzenas, mensal, trimestral,
+  semestral, anual) dentro do próprio app.
+- Fase 5 (v0.9): exportação PDF/Excel/CSV/JSON, auditoria/segurança.
+- Fase 6 (v1.0): refinamentos finais de produtos/vendas/caixa, design
+  responsivo e documentação completa.

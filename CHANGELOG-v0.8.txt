@@ -1,0 +1,61 @@
+LUNA FEM FINANCE - CHANGELOG v0.8
+Fase 4 do roteiro rumo à V1.0: "Análises e memória"
+(Módulo 3, Módulo 4 e Módulo 5 do pedido original)
+==============================================================================
+
+NOVIDADES
+
+Novo item de menu: Análises, com três abas internas.
+
+1) Por período (Módulo 3)
+   - Os mesmos períodos que já existiam no Painel Mobile / Google Sheets,
+     agora direto no app, sem precisar do celular: Diário, Semanal, 1ª
+     Quinzena, 2ª Quinzena, Mensal, Trimestral, Semestral e Anual.
+   - Setas "‹ Anterior" e "Próximo ›" para navegar entre os períodos
+     passados (mês anterior, trimestre anterior, etc.) - não mostra só o
+     período atual.
+   - Cada período mostra: vendas, lucro, custo, desconto, ticket médio,
+     vendas canceladas, comparação percentual com o período anterior,
+     formas de pagamento, vendedores, produtos mais vendidos e um resumo
+     do caixa (fechamentos e diferença).
+
+2) Resumos Mensais (Módulo 4)
+   - Uma lista com um card por mês que teve vendas, o mais recente
+     sempre em cima, atualizada sozinha conforme os meses passam - não
+     precisa criar nada manualmente.
+   - Cada mês mostra a mesma análise completa do item acima, mais o
+     detalhamento da 1ª e 2ª quinzena separadas.
+
+3) Resumo Anual (Módulo 5)
+   - Um card por ano que teve vendas, o mais recente em cima.
+   - Mostra o total de cada um dos 12 meses daquele ano, a mesma análise
+     completa, e a comparação percentual com o ano anterior.
+   - Como o app não tem como "acordar sozinho" exatamente à meia-noite de
+     31 de dezembro, o resumo de um ano fica pronto assim que houver
+     qualquer venda registrada nele - você não precisa criar nem fechar
+     nada, ele já aparece completo quando você abre a aba.
+
+SOBRE A CONSISTÊNCIA COM O GOOGLE SHEETS
+
+Os cálculos usam a mesma matemática de datas que já existia no Apps
+Script (mesmas quinzenas, mesmos trimestres, mesmos semestres), mas o
+código foi propositalmente escrito separado do que alimenta a
+sincronização com o Google Sheets. Preferimos duplicar essa lógica a
+arriscar mudar, mesmo que por acidente, os números que a planilha já usa
+hoje para calcular comissão. Testei os dois lados com o mesmo conjunto de
+vendas de exemplo (períodos diferentes, meses diferentes, anos
+diferentes) e os totais batem.
+
+O QUE NÃO MUDOU
+
+- Nenhuma função existente foi removida.
+- Nenhum dado antigo é apagado ou renomeado.
+- O Apps Script / Google Sheets não foi alterado nesta fase - o Painel
+  Mobile continua funcionando exatamente como estava.
+
+PRÓXIMAS FASES RUMO À V1.0
+
+- Fase 5 (v0.9): exportação de relatórios em PDF/Excel/CSV/JSON, além do
+  CSV que já existe, e histórico de ações (auditoria/segurança).
+- Fase 6 (v1.0): refinamentos finais de produtos/vendas/caixa, design
+  responsivo e documentação completa.

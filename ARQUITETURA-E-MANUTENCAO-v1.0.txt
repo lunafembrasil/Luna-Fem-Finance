@@ -1,0 +1,132 @@
+LUNA FEM FINANCE v1.0 - ARQUITETURA E MANUTENÇÃO
+==================================================
+Este arquivo existe para qualquer pessoa (ou IA) que precise mexer no
+código no futuro conseguir se localizar rapidamente, sem precisar ler
+as quase 3000 linhas de app.js do início ao fim.
+
+VISÃO GERAL
+-----------
+- index.html: estrutura de todas as telas (login, Caixa, Administrador
+  com o Centro de Controle e suas 13 abas).
+- style.css: toda a aparência (branco + rosa + detalhe rosa gold),
+  organizado cronologicamente por versão (comentários "/* v0.x */"
+  marcam onde cada fase adicionou estilos).
+- app.js: toda a lógica. Um arquivo só, de propósito (veja a seção
+  "Por que app.js não foi dividido em vários arquivos" abaixo).
+- apps_script_luna_fem_finance_v0_7.gs/.txt: o backend do Painel Mobile,
+  que roda dentro do Google Sheets (Apps Script), não no navegador.
+
+POR QUE app.js NÃO FOI DIVIDIDO EM VÁRIOS ARQUIVOS
+----------------------------------------------------
+O projeto original pedia código "modularizado". A forma mais óbvia de
+fazer isso seria dividir app.js em vários arquivos (um para o Caixa, um
+para produtos, um para análises, etc.). Decidi não fazer essa divisão
+na Fase 6 (a última fase) pelos seguintes motivos:
+
+1. Muitas funções são chamadas de dentro de HTML gerado dinamicamente,
+   com onclick="nomeDaFuncao(...)" (por exemplo, os botões da lista de
+   produtos, dos vendedores, do carrinho de venda manual). Isso só
+   funciona porque hoje todo o app.js roda como "script clássico" e
+   todas as funções ficam automaticamente visíveis no escopo global.
+2. Dividir em arquivos ES module (import/export) quebraria todos esses
+   onclick, a não ser que cada função fosse manualmente exposta em
+   window.nomeDaFuncao = nomeDaFuncao - uma mudança mecânica, mas
+   arriscada de fazer sem introduzir um erro silencioso, bem no fim do
+   projeto, depois de 6 fases de testes.
+3. O ganho seria só organizacional (nenhuma funcionalidade nova, nenhum
+   bug a menos) - não valia o risco de mexer em código que já funciona,
+   testado, às vésperas da entrega da V1.0.
+
+Em vez disso, este arquivo cumpre o papel de "modularização": um mapa
+de onde cada assunto mora dentro de app.js, para navegação rápida.
+
+MAPA DE app.js POR ASSUNTO (número de linha aproximado)
+-----------------------------------------------------------
+Linhas 1-13     Constantes de armazenamento (chaves do localStorage,
+                versão do app). NUNCA mude STORAGE_KEY (linha 1) - veja
+                aviso especial abaixo.
+Linhas 15-58    defaultData (formato de um banco de dados novo) e
+                let db = loadDB() (carrega os dados ao abrir o app).
+Linhas 60-159   loadDB / migrateDB (migração automática entre versões -
+                toda vez que um campo novo é adicionado a uma versão,
+                ele entra aqui) / saveDB / funções pequenas utilitárias
+                (money, todayISO, uid, getDeviceName, etc.).
+Linhas 160-260  Login, troca de tela (showScreen), inicialização do app
+                ao carregar a página, indicador online/offline.
+Linhas 261-431  setupTabs / setupEvents (liga todos os botões da tela a
+                suas funções) / renderAll (a função que redesenha a tela
+                inteira sempre que algo muda) / fillCategories /
+                fillSellers.
+Linhas 431-706  Tela do Caixa: carrinho, Produto Rápido, cálculo de
+                desconto, pagamento (inclusive pagamento misto),
+                finishSale (fecha uma venda).
+Linhas 707-1043 Dashboard (Painel), Início, Clientes, Vendedores,
+                Configurações do Administrador.
+Linhas 1044-1255 Produtos: lista com margem de lucro, importação em
+                massa (CSV), cadastro/edição/exclusão de produto.
+Linhas 1256-1409 Histórico de vendas, cancelamento de venda, Caixa do
+                Administrador (abertura/fechamento/movimentos).
+Linhas 1410-1571 Relatórios: resumo geral, resumo por vendedor, CSV.
+Linhas 1467-1576 Exportação de relatórios em Excel/PDF/JSON (usada por
+                Relatórios e por Análises).
+Linhas 1577-1737 Lançamento manual de venda (Administrador > Vendas).
+Linhas 1738-1825 Histórico de sincronização e Histórico de ações
+                (auditoria).
+Linhas 1826-2116 Google Drive: escolher pasta, salvar backup, backup
+                automático após venda, verificação de outras máquinas.
+Linhas 2117-2320 Fusionador Inteligente de backups (mergeBackups) e a
+                tela de Ferramentas que usa esse motor.
+Linhas 2321-2429 Datas: parseSaleDateTime, cálculo de início/fim de dia,
+                rangeAnalysis (motor de análise por período, usado por
+                buildAllAnalyses - que alimenta o Google Sheets).
+Linhas 2430-2731 Análises dentro do app (Por período, Resumos Mensais,
+                Resumo Anual) - motor de períodos próprio (computePeriodRange),
+                propositalmente separado do buildAllAnalyses que alimenta
+                o Sheets (veja aviso abaixo).
+Linhas 2733-2949 Configuração e envio do Painel Mobile (Google Sheets):
+                mobileConfig, buildMobilePayload, syncMobilePanel.
+Linhas 2950-fim  Pequenas funções utilitárias finais (labelPayment,
+                escapeHTML).
+
+AVISOS IMPORTANTES PARA QUEM FOR MEXER NO CÓDIGO
+-----------------------------------------------------
+1. STORAGE_KEY (linha 1) é "luna_fem_finance_v0_3" - um nome herdado de
+   uma versão bem antiga do projeto. NUNCA mude esse valor: é a chave
+   que o navegador usa para encontrar os dados já salvos. Mudar isso
+   faria o app "esquecer" todos os dados existentes de todas as lojas
+   que já usam o sistema.
+
+2. Existem DOIS motores de cálculo de período parecidos:
+   - buildAllAnalyses() (linha ~2385): alimenta o Google Sheets/Painel
+     Mobile. É o mais antigo (existe desde a v0.4).
+   - computePeriodRange() + rangeAnalysis() usados pela aba Análises
+     dentro do app (Fase 4, v0.8): construído separado de propósito,
+     para nunca arriscar mudar sem querer os números que o Sheets já
+     usa para calcular comissão. Se um dia decidirem unificar os dois,
+     façam isso com bastante teste antes - eles usam a mesma matemática
+     de datas, mas são dois códigos diferentes.
+
+3. Toda ação sensível (produto, venda cancelada, vendedor, senha,
+   regras) deveria chamar logAction(...) - ver linha ~1783. Se adicionar
+   uma ação sensível nova, adicione o registro lá também.
+
+4. Todo backup/sincronização deveria chamar logSyncEvent(...) ou
+   logSyncEventThrottled(...) (linha ~1744 e ~1819) - o "Throttled" é
+   para eventos automáticos que aconteceriam toda hora (evita que o
+   histórico vire uma lista infinita); o normal é para ações que o
+   Administrador clicou de propósito.
+
+5. Antes de adicionar um campo novo em db.settings, db.sellers ou
+   qualquer outro lugar, lembre de adicionar o valor padrão também em
+   migrateDB() (linha ~68), senão quem restaurar um backup antigo vai
+   ficar sem esse campo.
+
+TESTES REALIZADOS ANTES DE CADA ENTREGA
+--------------------------------------------
+Cada fase, desde a Fase 1, foi validada com testes automatizados de
+navegador (login, vendas, cancelamento, backups, migração de dados
+antigos, fusão de backups, modo offline, análises com dados de vários
+meses/anos, exportações, importação de produtos) e com verificação
+visual em três larguras de tela (celular pequeno, celular grande e
+tablet). Isso não substitui o uso real na loja, mas reduz bastante a
+chance de um problema básico passar despercebido.

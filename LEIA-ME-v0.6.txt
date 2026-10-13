@@ -1,0 +1,54 @@
+LUNA FEM FINANCE v0.6 - LEIA-ME / MANUAL DE ATUALIZAÇÃO
+========================================================
+
+O QUE É ESTA VERSÃO
+--------------------
+Fase 2 do roteiro combinado rumo à V1.0: blindagem de dados (backups
+versionados, histórico de sincronização e um fusionador inteligente de
+backups). Veja CHANGELOG-v0.6.txt para a lista completa.
+
+COMO ATUALIZAR
+--------------
+1. Antes de qualquer coisa, faça um backup:
+   Administrador > Backups > "Baixar backup JSON".
+
+2. Substitua index.html, style.css e app.js pelos desta versão.
+   (O apps_script...gs continua sem alteração nesta fase.)
+
+3. Abra o index.html. Seus dados aparecem automaticamente.
+
+COMO USAR O FUSIONADOR INTELIGENTE DE BACKUPS (novidade)
+----------------------------------------------------------
+Use isso quando precisar juntar as vendas de duas máquinas, ou duas
+cópias de backup de períodos diferentes, em um único arquivo.
+
+1. Administrador > Ferramentas.
+2. Em "Backup Principal", escolha o arquivo .json que você considera a
+   base (por exemplo, o backup mais recente do computador principal).
+3. Em "Backup Secundário", escolha o outro arquivo .json que você quer
+   incorporar (por exemplo, o backup do computador da outra vendedora).
+4. Clique em "Analisar". O sistema mostra quantos produtos, vendas,
+   movimentos de caixa e vendedores são novos, e quantos conflitos
+   encontrou (nesses casos, o Principal sempre prevalece).
+5. Clique em "Baixar Backup Fusionado" para gerar o arquivo combinado,
+   ou em "Usar como dados atuais deste computador" para já continuar
+   trabalhando com os dois juntos nesta máquina.
+
+Nada é apagado ou duplicado - cada venda, produto e movimento de caixa
+é reconhecido pelo seu identificador único.
+
+SOBRE O HISTÓRICO DE SINCRONIZAÇÃO (novidade)
+-----------------------------------------------
+Em Administrador > Sincronização, no final da página, você agora vê uma
+lista com cada backup e sincronização feita: data, hora, quem estava
+logado e se deu certo. É uma forma simples de conferir se os backups
+automáticos estão realmente acontecendo.
+
+O CAIXA (TELA DE VENDA) MUDOU?
+--------------------------------
+Não. Só o Administrador ganhou essas novidades.
+
+SE ALGO DER ERRADO
+-------------------
+Restaure o backup salvo no passo 1 e me avise para eu corrigir antes de
+continuar para a próxima fase.

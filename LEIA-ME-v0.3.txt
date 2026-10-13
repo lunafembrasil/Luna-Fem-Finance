@@ -1,0 +1,70 @@
+LUNA FEM FINANCE v0.3
+
+NOVIDADES DA v0.3:
+- Nova seção: Nuvem / Google Drive.
+- Configuração de pasta do Google Drive para salvar backups direto.
+- Botão para salvar backup JSON diretamente na pasta do Google Drive.
+- Botão para salvar relatório CSV diretamente na pasta do Google Drive.
+- Controle visual de backup diário pendente ou realizado.
+- Checklist de fechamento de caixa.
+
+IMPORTANTE:
+Esta versão usa Google Drive para computador no Windows.
+A app salva o arquivo em uma pasta local sincronizada pelo Google Drive.
+Depois o Google Drive envia esse arquivo para a nuvem.
+
+PASSO A PASSO:
+1. Instale Google Drive para computador no Windows.
+2. Faça login com sua conta Google.
+3. No Google Drive, crie a pasta:
+   Luna Fem Finance
+4. Dentro dela, crie:
+   Backups
+   Relatorios
+5. Abra a app Luna Fem Finance v0.3.
+6. Entre como Administrador.
+7. Vá em Nuvem / Google Drive.
+8. Clique em Escolher pasta do Google Drive.
+9. Selecione a pasta Backups.
+10. No fechamento da loja, clique em Salvar backup agora no Google Drive.
+
+OBSERVAÇÃO:
+- Use Google Chrome ou Microsoft Edge atualizado.
+- O navegador pode pedir permissão para gravar na pasta.
+- Esta versão salva backup quando a app está aberta.
+- Para backup 100% automático com a app fechada, será necessário transformar em app de desktop na próxima etapa.
+
+ATUALIZAR DA v0.2.1:
+1. Abra a versão v0.2.1.
+2. Entre como Administrador.
+3. Faça backup JSON.
+4. Abra a versão v0.3.
+5. Entre como Administrador.
+6. Restaure o backup no menu Backup.
+7. Depois configure a pasta Google Drive no menu Nuvem / Google Drive.
+
+
+ATUALIZAÇÃO v0.3.1:
+- Produto rápido liberado para Caixa.
+- Produtos criados pelo Caixa ficam pendentes de revisão pelo Administrador.
+
+
+ATUALIZAÇÃO v0.3.2:
+- Backup automático silencioso depois de cada venda finalizada no Caixa.
+- Requer pasta Google Drive previamente configurada pelo Administrador.
+
+
+ATUALIZAÇÃO v0.4:
+- Adicionado Painel Mobile com sincronização para Google Sheets via Apps Script.
+
+
+ATUALIZAÇÃO v0.4.1:
+- Desconto de 0% a 80% no Caixa.
+- Relatórios, CSV e payload mobile agora incluem subtotal/desconto/total final.
+
+
+ATUALIZAÇÃO v0.4.2:
+- Análises no Painel Mobile.
+- Eliminar produto no Administrador.
+- Abertura de caixa com backup/sync automático.
+- Permite venda sem estoque.

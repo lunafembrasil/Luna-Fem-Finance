@@ -1,0 +1,5 @@
+Luna Fem Finance V1.4 - Ultra Rápida
+
+Renderização por aba: somente o painel ativo é recalculado. Históricos grandes não são reconstruídos a cada clique.
+
+Dados permanecem em IndexedDB. Backup leve continua disponível. Nenhuma venda, produto ou histórico é apagado por esta otimização.

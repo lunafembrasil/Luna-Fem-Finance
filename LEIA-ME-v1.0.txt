@@ -1,0 +1,50 @@
+LUNA FEM FINANCE v1.0 - LEIA-ME / MANUAL DE ATUALIZAÇÃO
+========================================================
+
+O QUE É ESTA VERSÃO
+--------------------
+A V1.0. Última fase do roteiro combinado: importação em massa de
+produtos, margem de lucro na lista de produtos, revisão de design
+responsivo, e documentação completa do projeto. Veja CHANGELOG-v1.0.txt
+para os detalhes desta fase, e GUIA-COMPLETO-LUNA-FEM-FINANCE-v1.0.txt
+para o manual de uso de todo o sistema.
+
+COMO ATUALIZAR
+--------------
+1. Backup primeiro: Administrador > Backups > "Baixar backup JSON".
+2. Substitua index.html, style.css e app.js pelos desta versão.
+3. Abra o index.html. Seus dados aparecem automaticamente.
+4. O Apps Script não muda nesta versão.
+
+COMO IMPORTAR PRODUTOS EM MASSA (novidade)
+----------------------------------------------
+1. Administrador > Produtos > "+ Importar produtos em massa".
+2. Cole os dados de uma planilha, ou selecione um arquivo .csv.
+   Formato esperado (separado por ; ou ,), com esta linha de cabeçalho:
+   nome;categoria;tipo;custo;preco;estoque;sku;fornecedor;observacoes
+3. "Analisar" - confira quantos produtos serão criados e quantos serão
+   atualizados (produtos com o mesmo SKU de um já cadastrado).
+4. "Confirmar importação".
+
+ARQUIVOS INCLUÍDOS NESTE ZIP
+--------------------------------
+- index.html, style.css, app.js - o sistema em si.
+- apps_script_luna_fem_finance_v0_7.gs/.txt - Apps Script (sem mudanças
+  desde a Fase 3 - se você já atualizou na v0.7, não precisa mexer de
+  novo).
+- LEIA-ME-v1.0.txt - este arquivo.
+- CHANGELOG-v1.0.txt - o que mudou nesta fase.
+- ARQUITETURA-E-MANUTENCAO-v1.0.txt - para quem for mexer no código no
+  futuro (ou pedir para uma IA mexer).
+- GUIA-COMPLETO-LUNA-FEM-FINANCE-v1.0.txt - manual de uso completo do
+  sistema, do Caixa ao Administrador.
+- Os LEIA-ME e CHANGELOG de cada fase anterior (v0.5 a v0.9) continuam
+  aqui como histórico.
+
+O CAIXA (TELA DE VENDA) MUDOU?
+--------------------------------
+Não. Todas as novidades desta fase são para o Administrador.
+
+SE ALGO DER ERRADO
+-------------------
+Restaure o backup salvo no passo 1 e me avise para eu corrigir.

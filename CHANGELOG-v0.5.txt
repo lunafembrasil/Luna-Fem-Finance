@@ -1,0 +1,84 @@
+LUNA FEM FINANCE - CHANGELOG v0.5
+Fase 1 do roteiro rumo à V1.0: "Fundação" (Módulo 1 + Módulo 2 do pedido original)
+==============================================================================
+
+NOVIDADES
+
+1) Centro de Controle (Módulo 2)
+   - Novo menu lateral no Administrador, organizado em 3 grupos:
+     Visão geral (Início, Dashboard), Operação (Vendas, Caixa, Produtos,
+     Clientes, Vendedores) e Gestão (Relatórios, Backups, Sincronização,
+     Configurações).
+   - "Nuvem / Google Drive" e "Painel Mobile" foram unidos em uma única
+     aba "Sincronização" (o conteúdo e os botões de cada um continuam
+     exatamente os mesmos, só a organização visual mudou).
+   - Botão "Sair" também disponível direto no menu lateral.
+
+2) Dashboard profissional (Módulo 1)
+   Agora mostra, em tempo real, agrupado em 4 blocos:
+   - Hoje: vendas do dia, lucro do dia, custos do dia, ticket médio,
+     vendas canceladas.
+   - Operação: status do caixa (aberto/fechado + valor esperado),
+     estoque baixo, produtos cadastrados.
+   - Vendedores e comissões: melhor vendedor do dia, comissão estimada
+     do dia.
+   - Médias históricas: média diária (últimos 30 dias) e média mensal
+     (histórico completo).
+
+3) Tela de Início
+   - Resumo rápido do dia e atalhos para as áreas mais usadas.
+
+4) Clientes (novo)
+   - Lista construída automaticamente a partir do nome/telefone
+     informado em cada venda (nenhum cadastro novo é necessário).
+   - Mostra total gasto, quantidade de compras, ticket médio e data da
+     última compra por cliente, ordenado por total gasto.
+   - Vendas sem cliente identificado aparecem somadas à parte, para as
+     contas sempre baterem.
+
+5) Vendedores (novo)
+   - Cadastro de vendedores dentro do próprio app (antes só existia por
+     edição direta do arquivo).
+   - Campo de comissão % por vendedor (estimativa local, usada no
+     Dashboard). Vendedores podem ser desativados (não excluídos) -
+     saem da tela de venda do Caixa, mas todo o histórico permanece
+     intacto.
+   - IMPORTANTE: esta comissão % é local ao aplicativo. A comissão
+     "oficial" usada nos resumos do Google Sheets continua sendo
+     editada na planilha "Config Comissões", como já era. As duas serão
+     unificadas na Fase 3 (Módulo 12 - Apps Script).
+
+6) Configurações (novo)
+   - Trocar a senha do Administrador e do Caixa direto pelo app (antes
+     só era possível editando o código-fonte).
+   - Definir o alerta de estoque baixo.
+   - Definir o desconto máximo permitido na venda (antes fixo em 80%).
+
+CORREÇÃO IMPORTANTE
+
+- Restaurar um backup JSON antigo agora passa pelo mesmo processo de
+  migração automática usado ao abrir o app. Antes, um backup restaurado
+  não recebia os campos adicionados em versões novas. Isso não causava
+  erro visível até agora, mas passaria a causar assim que qualquer nova
+  versão adicionasse um campo - foi corrigido nesta versão.
+
+O QUE NÃO MUDOU
+
+- Nenhuma função existente foi removida.
+- Nenhum dado antigo é apagado ou renomeado.
+- A chave de armazenamento local não mudou - o app continua enxergando
+  os dados que você já tem no navegador.
+- O Apps Script / Google Sheets não foi alterado nesta fase (isso é a
+  Fase 3 do roteiro).
+
+PRÓXIMAS FASES RUMO À V1.0
+
+- Fase 2 (v0.6): blindagem de backups (versionamento, nunca sobrescrever),
+  histórico de sincronização, fusão inteligente de backups.
+- Fase 3 (v0.7): modo offline, multi usuário, multi conta Google, Apps
+  Script reescrito.
+- Fase 4 (v0.8): análises (diária, semanal, quinzenas, mensal, trimestral,
+  semestral, anual) dentro do próprio app.
+- Fase 5 (v0.9): exportação PDF/Excel/CSV/JSON, auditoria/segurança.
+- Fase 6 (v1.0): refinamentos finais de produtos/vendas/caixa, design
+  responsivo e documentação completa.

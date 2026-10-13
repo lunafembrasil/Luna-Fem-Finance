@@ -1,0 +1,77 @@
+GUIA - LUNA FEM FINANCE v0.4 - PAINEL MOBILE NO CELULAR
+
+OBJETIVO:
+Permitir que Agustín veja no celular um painel de consulta usando Google Sheets.
+
+O QUE VOCÊ VAI TER:
+- Resumo do dia
+- Vendas com data e hora
+- Vendas por vendedor
+- Formas de pagamento
+- Histórico de caixa
+- Produtos pendentes de revisão
+- Estoque baixo
+
+PASSO 1 - Criar a planilha Google Sheets
+1. Entre no Google Drive.
+2. Clique em Novo > Planilhas Google.
+3. Nomeie a planilha como:
+   Luna Fem Finance - Painel Admin
+
+PASSO 2 - Colocar o Apps Script
+1. Na planilha, vá em Extensões > Apps Script.
+2. Apague o código que aparecer.
+3. Abra o arquivo:
+   apps_script_luna_fem_finance_v0_4.gs
+4. Copie todo o conteúdo.
+5. Cole dentro do Apps Script.
+6. Salve o projeto.
+
+PASSO 3 - Conferir a chave secreta
+No começo do script vai aparecer:
+const SECRET = "LUNA_FEM_2026";
+
+Pode deixar assim ou trocar por outra chave.
+A mesma chave deve ser colocada dentro da app Luna Fem Finance v0.4.
+
+PASSO 4 - Publicar como Web App
+1. No Apps Script, clique em Implantar.
+2. Clique em Nova implantação.
+3. Em Tipo, escolha Aplicativo da Web.
+4. Em Executar como, escolha: Eu.
+5. Em Quem pode acessar, escolha: Qualquer pessoa.
+6. Clique em Implantar.
+7. Autorize as permissões.
+8. Copie a URL do Web App.
+
+PASSO 5 - Configurar na app
+1. Abra Luna Fem Finance v0.4.
+2. Entre como Administrador.
+3. Vá em Painel Mobile.
+4. Cole a URL do Web App.
+5. Coloque a chave secreta:
+   LUNA_FEM_2026
+6. Clique em Salvar configuração.
+7. Clique em Testar conexão.
+8. Abra a planilha Google Sheets no celular e veja se atualizou.
+
+PASSO 6 - Uso diário
+Depois de configurado:
+- Quando o Caixa finalizar uma venda, a app tentará atualizar o Painel Mobile automaticamente.
+- Se não houver internet, a venda continua salva na computadora.
+- Quando houver internet, você pode entrar como Administrador e clicar em Sincronizar agora.
+
+IMPORTANTE:
+O celular, nesta etapa, é somente para consulta.
+A caixa continua sendo a computadora da loja.
+
+ATUALIZAR DA v0.3.3:
+1. Abra a v0.3.3.
+2. Entre como Administrador.
+3. Faça Backup JSON.
+4. Extraia a v0.4 em uma pasta nova.
+5. Abra index.html da v0.4.
+6. Entre como Administrador.
+7. Restaure o Backup JSON.
+8. Configure novamente Google Drive se for necessário.
+9. Configure Painel Mobile.

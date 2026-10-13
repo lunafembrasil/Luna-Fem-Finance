@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luna Fem Finance v1.0</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="assets/luna_fem_finance_app_icon_192.png" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img class="brand-logo" src="assets/luna_fem_finance_app_icon_192.png" alt="Luna Fem Finance" />
+      <div>
+        <h1>Luna Fem Finance</h1>
+        <p>Controle simples de caixa, vendas, estoque e lucro</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span id="connectionStatus" class="connection-badge online">Online</span>
+      <button id="logoutBtn" class="btn ghost hidden">Sair</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="loginScreen" class="screen active">
+      <div class="login-card">
+        <img class="login-logo-img" src="assets/luna_fem_finance_app_icon_512.png" alt="Luna Fem Finance" />
+        <h2>Entrar no sistema</h2>
+        <p class="muted">Acesso seguro com Firebase Authentication</p>
+
+        <div class="role-grid">
+          <button type="button" class="role-btn active" data-role="cashier">Caixa</button>
+          <button type="button" class="role-btn" data-role="admin">Administrador</button>
+        </div>
+
+        <input id="loginEmail" class="input" type="email" placeholder="E-mail de acesso (ex: caixa@lunafem.com)" autocomplete="username" />
+        <input id="loginPassword" class="input" type="password" placeholder="Senha do Firebase" autocomplete="current-password" />
+        <button id="loginBtn" class="btn primary full" type="button">Entrar</button>
+        <div id="loginFeedback" class="tiny" style="color:#c53030;margin-top:8px;font-weight:600;"></div>
+        <p class="tiny">Base na nuvem · 100% Online · Firebase</p>
+      </div>
+    </section>
+
+    <section id="cashierScreen" class="screen">
+
+      <div id="cashierCashPanel" class="panel cashier-cash-panel"></div>
+
+      <div class="grid cashier-grid">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Caixa</h2>
+              <p>Total vendido hoje: <strong id="cashierTodayTotal">R$ 0,00</strong></p>
+            </div>
+            <div id="selectedSellerBadge" class="seller-badge">Vendedor 1</div>
+          </div>
+
+          <input id="productSearch" class="input" placeholder="Buscar por produto, categoria ou código..." />
+
+          <div class="quick-product-box">
+            <div class="quick-product-head">
+              <div>
+                <h3>Produto rápido</h3>
+                <p>Use quando o produto ainda não está cadastrado. O administrador completa custo, estoque e dados depois.</p>
+              </div>
+              <span class="badge">Caixa</span>
+            </div>
+
+            <div class="quick-product-grid">
+              <input id="quickProdName" class="input" placeholder="Nome do produto *" />
+              <input id="quickProdPrice" class="input" type="number" step="0.01" placeholder="Preço final de venda *" />
+              <select id="quickProdCategory" class="input"></select>
+              <input id="quickProdStock" class="input" type="number" step="1" placeholder="Estoque inicial opcional: padrão 1" />
+              <input id="quickProdNote" class="input" placeholder="Observação opcional" />
+              <button id="quickProductBtn" class="btn primary">Criar e adicionar ao carrinho</button>
+            </div>
+          </div>
+
+          <div id="productList" class="product-list"></div>
+        </section>
+
+        <aside class="panel">
+          <h2>Carrinho</h2>
+          <div id="cartList" class="cart-list"></div>
+
+          <div class="seller-box">
+            <p class="label">Vendedor da venda / comissão</p>
+            <div id="sellerCards" class="seller-cards"></div>
+          </div>
+
+          <div class="form-grid">
+            <input id="customerName" class="input" placeholder="Nome do cliente (opcional)" />
+            <input id="customerPhone" class="input" placeholder="Telefone do cliente (opcional)" />
+
+            <select id="paymentSelect" class="input">
+              <option value="dinheiro">Dinheiro</option>
+              <option value="pix">PIX</option>
+              <option value="debito">Débito</option>
+              <option value="credito">Crédito</option>
+              <option value="transferencia">Transferência bancária</option>
+              <option value="misto">Pagamento misto</option>
+            </select>
+
+            <div class="discount-box">
+              <label class="label">Desconto para o cliente</label>
+              <div class="discount-row">
+                <input id="discountPercent" class="input" type="number" min="0" max="80" step="1" value="0" />
+                <span>%</span>
+              </div>
+              <small id="discountHint">Permitido de 0% até 80%. Padrão: 0%.</small>
+            </div>
+
+            <div id="creditBox" class="hidden">
+              <select id="installments" class="input">
+                <option value="1">1x</option>
+                <option value="2">2x</option>
+                <option value="3">3x</option>
+                <option value="4">4x</option>
+                <option value="5">5x</option>
+                <option value="6">6x</option>
+                <option value="12">12x</option>
+              </select>
+            </div>
+
+            <div id="feeBox" class="hidden">
+              <input id="cardFee" class="input" type="number" step="0.01" placeholder="Taxa da maquininha em %" />
+            </div>
+
+            <div id="mixedBox" class="hidden mixed-box">
+              <p class="label">Valores do pagamento misto</p>
+              <input id="mixDinheiro" class="input" type="number" step="0.01" placeholder="Dinheiro" />
+              <input id="mixPix" class="input" type="number" step="0.01" placeholder="PIX" />
+              <input id="mixDebito" class="input" type="number" step="0.01" placeholder="Débito" />
+              <input id="mixCredito" class="input" type="number" step="0.01" placeholder="Crédito" />
+              <input id="mixTransferencia" class="input" type="number" step="0.01" placeholder="Transferência" />
+            </div>
+
+            <textarea id="saleNote" class="input" placeholder="Observação da venda (opcional)"></textarea>
+          </div>
+
+          <div class="total-box totals-breakdown">
+            <div class="total-line">
+              <span>Subtotal</span>
+              <strong id="cartSubtotal">R$ 0,00</strong>
+            </div>
+            <div class="total-line discount-line">
+              <span>Desconto</span>
+              <strong id="cartDiscount">R$ 0,00</strong>
+            </div>
+            <div class="total-line final-total">
+              <span>Total final</span>
+              <strong id="cartTotal">R$ 0,00</strong>
+            </div>
+            <small>O caixa não visualiza custo nem lucro.</small>
+          </div>
+
+          <button id="finishSaleBtn" class="btn primary full">Finalizar venda</button>
+        </aside>
+      </div>
+    </section>
+
+    <section id="adminScreen" class="screen">
+      <div class="cc-layout">
+        <nav class="cc-nav">
+          <div class="cc-nav-group">
+            <span class="cc-nav-label">Visão geral</span>
+            <button class="tab active" data-tab="home">Início</button>
+            <button class="tab" data-tab="dashboard">Dashboard</button>
+          </div>
+          <div class="cc-nav-group">
+            <span class="cc-nav-label">Operação</span>
+            <button class="tab" data-tab="sales">Vendas</button>
+            <button class="tab" data-tab="cash">Caixa</button>
+            <button class="tab" data-tab="products">Produtos</button>
+            <button class="tab" data-tab="clients">Clientes</button>
+            <button class="tab" data-tab="sellers">Vendedores</button>
+          </div>
+          <div class="cc-nav-group">
+            <span class="cc-nav-label">Gestão</span>
+            <button class="tab" data-tab="reports">Relatórios</button>
+            <button class="tab" data-tab="analises">Análises</button>
+            <button class="tab" data-tab="backup">Backups</button>
+            <button class="tab" data-tab="sync">Sincronização</button>
+            <button class="tab" data-tab="tools">Ferramentas</button>
+            <button class="tab" data-tab="config">Configurações</button>
+          </div>
+          <button id="sidebarLogoutBtn" class="cc-nav-exit">Sair</button>
+        </nav>
+
+        <div class="cc-content">
+
+          <div id="homeTab" class="tab-content active">
+            <div class="panel home-hero">
+              <h2>Olá! Aqui está o resumo de hoje</h2>
+              <p class="muted">Acesso rápido às áreas mais usadas do Luna Fem Finance.</p>
+              <div class="metrics" id="homeQuickMetrics"></div>
+            </div>
+            <div class="panel">
+              <h3>Atalhos</h3>
+              <div class="home-shortcuts">
+                <button class="btn ghost" data-goto="sales">Ver vendas</button>
+                <button class="btn ghost" data-goto="cash">Abrir / fechar caixa</button>
+                <button class="btn ghost" data-goto="products">Cadastrar produto</button>
+                <button class="btn ghost" data-goto="reports">Ver relatórios</button>
+                <button class="btn ghost" data-goto="clients">Ver clientes</button>
+                <button class="btn ghost" data-goto="sellers">Ver vendedores</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="dashboardTab" class="tab-content">
+            <p class="muted dash-intro">Painel em tempo real de Luna Fem Brasil.</p>
+
+            <h3 class="dash-group-title">Hoje</h3>
+            <div class="metrics">
+              <div class="metric"><span>Vendas do dia</span><strong id="adminTodaySales">R$ 0,00</strong></div>
+              <div class="metric"><span>Lucro do dia</span><strong id="adminTodayProfit">R$ 0,00</strong></div>
+              <div class="metric"><span>Custos do dia</span><strong id="adminTodayCost">R$ 0,00</strong></div>
+              <div class="metric"><span>Ticket médio</span><strong id="adminTicketAvg">R$ 0,00</strong><small id="adminTicketAvgSub" class="metric-sub"></small></div>
+              <div class="metric"><span>Vendas canceladas</span><strong id="adminCancelledToday">0</strong></div>
+            </div>
+
+            <h3 class="dash-group-title">Operação</h3>
+            <div class="metrics">
+              <div class="metric"><span>Caixa</span><strong id="adminCashStatus">Fechado</strong><small id="adminCashSub" class="metric-sub"></small></div>
+              <div class="metric"><span>Estoque baixo</span><strong id="adminLowStockCount">0</strong></div>
+              <div class="metric"><span>Produtos cadastrados</span><strong id="adminProductsCount">0</strong></div>
+            </div>
+
+            <h3 class="dash-group-title">Vendedores e comissões</h3>
+            <div class="metrics">
+              <div class="metric"><span>Melhor vendedor hoje</span><strong id="adminBestSeller">-</strong><small id="adminBestSellerSub" class="metric-sub"></small></div>
+              <div class="metric"><span>Comissões estimadas hoje</span><strong id="adminCommissionToday">R$ 0,00</strong></div>
+            </div>
+
+            <h3 class="dash-group-title">Médias históricas</h3>
+            <div class="metrics">
+              <div class="metric"><span>Média diária (30 dias)</span><strong id="adminDailyAvg">R$ 0,00</strong></div>
+              <div class="metric"><span>Média mensal (histórico)</span><strong id="adminMonthlyAvg">R$ 0,00</strong></div>
+            </div>
+
+            <div class="grid two">
+              <div class="panel">
+                <h2>Formas de pagamento hoje</h2>
+                <div id="paymentSummary"></div>
+              </div>
+              <div class="panel">
+                <h2>Estoque baixo - detalhe</h2>
+                <div id="lowStockList"></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h2>Vendas por vendedor hoje</h2>
+              <div id="sellerTodaySummary"></div>
+            </div>
+          </div>
+
+          <div id="salesTab" class="tab-content">
+            <details class="manual-sale-panel">
+              <summary><strong>+ Lançar venda manual</strong><span>Para vendas esquecidas ou feitas fora do Caixa</span></summary>
+              <div class="manual-sale-body">
+                <div class="grid two">
+                  <div>
+                    <label class="label">Data e hora da venda</label>
+                    <input id="manualSaleDateTime" class="input" type="datetime-local" />
+                    <label class="label">Vendedor</label>
+                    <select id="manualSaleSeller" class="input">
+                      <option value="" disabled selected>Selecione um vendedor</option>
+                    </select>
+                    <label class="label">Forma de pagamento</label>
+                    <select id="manualSalePayment" class="input">
+                      <option value="dinheiro">Dinheiro</option>
+                      <option value="pix">Pix</option>
+                      <option value="debito">Débito</option>
+                      <option value="credito">Crédito</option>
+                      <option value="transferencia">Transferência</option>
+                    </select>
+                    <label class="label">Desconto (%)</label>
+                    <input id="manualDiscountPercent" class="input" type="number" min="0" max="80" step="1" value="0" />
+                    <input id="manualCustomerName" class="input" placeholder="Nome do cliente (opcional)" />
+                    <input id="manualCustomerPhone" class="input" placeholder="Telefone do cliente (opcional)" />
+                    <textarea id="manualSaleNote" class="input" placeholder="Observação (opcional)"></textarea>
+                  </div>
+                  <div>
+                    <label class="label">Produtos</label>
+                    <input id="manualProductSearch" class="input" placeholder="Buscar produto..." oninput="renderManualSaleProductPicker()" />
+                    <div id="manualProductList" class="manual-product-list"></div>
+                    <hr />
+                    <div id="manualCartList"></div>
+                    <div class="total-box totals-breakdown">
+                      <div class="total-line final-total">
+                        <span>Total</span>
+                        <strong id="manualCartTotal">R$ 0,00</strong>
+                      </div>
+                    </div>
+                    <button id="finishManualSaleBtn" class="btn primary full">Registrar venda manual</button>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <div class="panel">
+              <h2>Histórico de vendas</h2>
+              <div id="salesList"></div>
+            </div>
+          </div>
+
+          <div id="cashTab" class="tab-content">
+            <div class="grid two">
+              <div class="panel">
+                <h2>Abertura e fechamento de caixa</h2>
+                <div id="cashStatus"></div>
+                <hr />
+                <h3>Entrada ou retirada manual</h3>
+                <select id="cashMoveType" class="input">
+                  <option value="entrada">Entrada</option>
+                  <option value="retirada">Retirada</option>
+                </select>
+                <input id="cashMoveValue" class="input" type="number" step="0.01" placeholder="Valor" />
+                <input id="cashMoveNote" class="input" placeholder="Motivo / observação" />
+                <button id="saveCashMoveBtn" class="btn primary full">Registrar movimento</button>
+              </div>
+              <div class="panel">
+                <h2>Histórico de caixa</h2>
+                <div id="cashHistory"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="productsTab" class="tab-content">
+            <details class="manual-sale-panel">
+              <summary><strong>+ Importar produtos em massa</strong><span>Cadastre ou atualize vários produtos de uma vez</span></summary>
+              <div class="manual-sale-body">
+                <p class="muted">
+                  Cole os dados de uma planilha (separados por ; ou ,) com cabeçalho na primeira linha.
+                  Colunas reconhecidas: nome, categoria, tipo (produto/serviço), custo, preco, estoque, sku,
+                  fornecedor, observacoes. Se o SKU já existir em um produto cadastrado, ele é atualizado;
+                  caso contrário, um produto novo é criado. Nenhum produto existente é apagado.
+                </p>
+                <textarea id="importProductsText" class="input" rows="6" placeholder="nome;categoria;tipo;custo;preco;estoque;sku;fornecedor&#10;Batom Matte;Maquiagem;produto;8;19.90;15;BAT-001;Fornecedor X"></textarea>
+                <label class="btn ghost file-label">
+                  Ou selecionar arquivo CSV
+                  <input id="importProductsFile" type="file" accept=".csv,.txt" hidden />
+                </label>
+                <button id="analyzeImportBtn" class="btn primary full">Analisar</button>
+                <div id="importAnalysis"></div>
+                <button id="confirmImportBtn" class="btn primary full hidden">Confirmar importação</button>
+              </div>
+            </details>
+
+            <div class="grid two">
+              <div class="panel">
+                <h2>Cadastrar produto ou serviço</h2>
+                <div class="form-grid">
+                  <input id="prodId" type="hidden" />
+                  <input id="prodName" class="input" placeholder="Nome do produto" />
+                  <select id="prodCategory" class="input"></select>
+                  <select id="prodType" class="input">
+                    <option value="produto">Produto com estoque</option>
+                    <option value="servico">Serviço sem estoque</option>
+                  </select>
+                  <input id="prodCost" class="input" type="number" step="0.01" placeholder="Preço de custo" />
+                  <input id="prodPrice" class="input" type="number" step="0.01" placeholder="Preço de venda" />
+                  <input id="prodStock" class="input" type="number" step="1" placeholder="Estoque" />
+                  <input id="prodSku" class="input" placeholder="Código interno / futuro código de barras" />
+                  <input id="prodSupplier" class="input" placeholder="Fornecedor" />
+                  <textarea id="prodNote" class="input" placeholder="Observações"></textarea>
+                  <button id="saveProductBtn" class="btn primary full">Salvar produto</button>
+                  <button id="clearProductBtn" class="btn ghost full">Limpar formulário</button>
+                </div>
+              </div>
+              <div class="panel">
+                <h2>Produtos cadastrados</h2>
+                <div id="adminProductList"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="clientsTab" class="tab-content">
+            <div class="panel">
+              <h2>Clientes</h2>
+              <p class="muted">Lista construída automaticamente a partir do nome e telefone informados em cada venda. Ordenada por total gasto.</p>
+              <div id="clientsList"></div>
+            </div>
+          </div>
+
+          <div id="sellersTab" class="tab-content">
+            <div class="grid two">
+              <div class="panel">
+                <h2>Cadastrar vendedor</h2>
+                <div class="form-grid">
+                  <input id="sellerNumber" type="hidden" />
+                  <input id="sellerName" class="input" placeholder="Nome do vendedor" />
+                  <input id="sellerCommission" class="input" type="number" min="0" max="100" step="0.1" placeholder="Comissão % (estimativa local)" value="0" />
+                  <button id="saveSellerBtn" class="btn primary full">Salvar vendedor</button>
+                  <button id="clearSellerBtn" class="btn ghost full">Limpar formulário</button>
+                </div>
+                <p class="tiny">Esta comissão é uma estimativa local do app, usada no Dashboard. O valor oficial dos resumos no Google Sheets continua editado na planilha "Config Comissões" até a Fase 3 do projeto unificar as duas.</p>
+              </div>
+              <div class="panel">
+                <h2>Vendedores cadastrados</h2>
+                <div id="sellersAdminList"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="reportsTab" class="tab-content">
+            <div class="panel">
+              <h2>Relatórios</h2>
+              <p class="muted">Resumo geral e exportação CSV. Para análises por período, resumos mensais e resumo anual, veja a aba Análises.</p>
+              <div id="reportSummary" class="metrics"></div>
+              <div class="panel inner-panel">
+                <h2>Resumo por vendedor</h2>
+                <div id="sellerReportSummary"></div>
+              </div>
+
+              <div class="panel inner-panel">
+                <h2>Vendas detalhadas com data e hora</h2>
+                <p class="muted">Histórico de cada venda registrada, incluindo data, hora, vendedor, forma de pagamento e total.</p>
+                <div id="salesReportDetail"></div>
+              </div>
+
+              <div class="panel inner-panel">
+                <h2>Histórico de abertura e fechamento de caixa</h2>
+                <p class="muted">Aqui aparecem os valores informados pelo Caixa na abertura e no fechamento do dia.</p>
+                <div id="cashReportHistory"></div>
+              </div>
+
+              <div class="export-row">
+                <span class="export-label">Exportar vendas:</span>
+                <button id="exportCsvBtn" class="btn primary">CSV</button>
+                <button class="btn ghost" data-export="excel">Excel</button>
+                <button class="btn ghost" data-export="pdf">PDF</button>
+                <button class="btn ghost" data-export="json">JSON</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="analisesTab" class="tab-content">
+            <div class="subtab-bar">
+              <button class="subtab active" data-view="periodo">Por período</button>
+              <button class="subtab" data-view="mensal">Resumos Mensais</button>
+              <button class="subtab" data-view="anual">Resumo Anual</button>
+            </div>
+
+            <div id="periodoView" class="subtab-content active">
+              <div class="panel">
+                <h2>Análises por período</h2>
+                <p class="muted">Os mesmos períodos que já existem no Painel Mobile / Google Sheets, agora direto no app.</p>
+                <div id="analysisPeriodTypes" class="period-type-row"></div>
+                <div id="analysisPeriodContent"></div>
+              </div>
+            </div>
+
+            <div id="mensalView" class="subtab-content">
+              <div class="panel">
+                <h2>Resumos Mensais</h2>
+                <p class="muted">Um resumo completo para cada mês com vendas registradas. Atualiza sozinho conforme o mês vai passando - o mais recente sempre aparece primeiro.</p>
+                <div id="monthlySummaryList"></div>
+              </div>
+            </div>
+
+            <div id="anualView" class="subtab-content">
+              <div class="panel">
+                <h2>Resumo Anual</h2>
+                <p class="muted">Um resumo completo por ano, com todos os meses e comparação com o ano anterior. Aparece automaticamente para qualquer ano com vendas registradas.</p>
+                <div id="annualSummaryList"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="backupTab" class="tab-content">
+             <div class="panel">
+               <h2>Backup diário</h2>
+               <p>Backup <strong>leve</strong>: productos, ventas, vendedores y configuración. Excluye históricos voluminosos de caja/auditoría.</p>
+               <button id="downloadBackupBtn" class="btn primary">Baixar backup leve</button>
+               <button id="downloadFullBackupBtn" class="btn ghost full">Baixar backup completo (emergência)</button>
+               <label class="btn ghost file-label">Restaurar backup JSON<input id="restoreBackupInput" type="file" accept=".json" hidden /></label>
+             </div>
+           </div>
+           <div id="syncTab" class="tab-content">
+            <div class="panel">
+              <h2>Este computador</h2>
+              <p class="muted">
+                Nome usado para identificar de qual computador vieram as vendas, quando você
+                tiver mais de uma caixa. Para trocar o nome, vá em Configurações.
+              </p>
+              <div id="deviceInfoBox"></div>
+              <button id="checkOtherComputersBtn" class="btn ghost full">Verificar backups de outras máquinas agora</button>
+              <p class="tiny">
+                Várias contas Google podem sincronizar para a mesma planilha e a mesma pasta de backup:
+                a planilha usa uma URL + chave secreta (não pede login), e a pasta do Drive só precisa
+                ser compartilhada com quem for usá-la. O dono da conta que criou o Apps Script continua
+                sendo o dono da planilha.
+              </p>
+            </div>
+
+            <div class="grid two">
+              <div class="panel">
+                <h2>Nuvem / Google Drive</h2>
+                <p class="muted">
+                  Configure uma pasta do Google Drive para salvar backups e relatórios direto na nuvem. Cada venda finalizada no Caixa também gera backup automático.
+                </p>
+
+                <div class="drive-steps">
+                  <strong>Antes de configurar:</strong>
+                  <ol>
+                    <li>Instale o Google Drive para computador no Windows.</li>
+                    <li>Crie a pasta: <strong>Google Drive / Luna Fem Finance / Backups</strong>.</li>
+                    <li>Nesta tela, clique em <strong>Escolher pasta do Google Drive</strong>.</li>
+                  </ol>
+                </div>
+
+                <div id="driveStatus" class="drive-status"></div>
+                <div id="autoBackupStatus" class="drive-status"></div>
+
+                <button id="chooseDriveFolderBtn" class="btn primary full">Escolher pasta do Google Drive</button>
+                <button id="saveBackupToDriveBtn" class="btn primary full">Salvar backup leve agora no Google Drive</button>
+                 <button id="saveFullBackupToDriveBtn" class="btn ghost full">Salvar backup completo (emergência)</button>
+                <button id="saveReportToDriveBtn" class="btn ghost full">Salvar relatório CSV no Google Drive</button>
+                <button id="clearDriveFolderBtn" class="btn ghost full">Remover pasta configurada</button>
+
+                <p class="tiny">
+                  Observação: por segurança, o navegador pode pedir permissão para gravar na pasta.
+                </p>
+              </div>
+
+              <div class="panel">
+                <h2>Controle do backup diário</h2>
+                <div id="backupReminderBox"></div>
+
+                <div class="checklist">
+                  <h3>Rotina recomendada no fechamento</h3>
+                  <label><input type="checkbox" /> Conferir total vendido</label>
+                  <label><input type="checkbox" /> Conferir dinheiro físico</label>
+                  <label><input type="checkbox" /> Conferir PIX / Débito / Crédito / Transferência</label>
+                  <label><input type="checkbox" /> Fechar caixa</label>
+                  <label><input type="checkbox" /> Salvar backup no Google Drive</label>
+                </div>
+
+                <div class="drive-warning">
+                  Esta versão salva direto na pasta do Google Drive instalada no Windows.
+                  Para backup 100% automático mesmo com a app fechada, a próxima etapa será transformar em app de desktop.
+                </div>
+              </div>
+            </div>
+
+            <div class="grid two">
+              <div class="panel">
+                <h2>Painel Mobile / Google Sheets</h2>
+                <p class="muted">
+                  Configure a URL do Google Apps Script para atualizar uma planilha Google Sheets e ver os relatórios no celular.
+                </p>
+
+                <div class="drive-steps">
+                  <strong>Antes de configurar:</strong>
+                  <ol>
+                    <li>Crie a planilha: <strong>Luna Fem Finance - Painel Admin</strong>.</li>
+                    <li>Abra <strong>Extensões &gt; Apps Script</strong>.</li>
+                    <li>Cole o script enviado junto com esta versão.</li>
+                    <li>Implante como <strong>Aplicativo da Web</strong>.</li>
+                    <li>Cole abaixo a URL do Web App.</li>
+                  </ol>
+                </div>
+
+                <label class="label">URL do Apps Script Web App</label>
+                <input id="mobileScriptUrl" class="input" placeholder="Cole aqui a URL do Web App" />
+
+                <label class="label">Chave secreta</label>
+                <input id="mobileSecret" class="input" type="password" placeholder="Exemplo: LUNA_FEM_2026" />
+
+                <button id="saveMobileConfigBtn" class="btn primary full">Salvar configuração do Painel Mobile</button>
+                <button id="testMobileSyncBtn" class="btn ghost full">Testar conexão</button>
+                <button id="syncMobileNowBtn" class="btn primary full">Sincronizar agora</button>
+
+                <div id="mobileSyncStatus" class="drive-status"></div>
+              </div>
+
+              <div class="panel">
+                <h2>O que aparece no celular</h2>
+                <div class="checklist">
+                  <label><input type="checkbox" checked disabled /> Resumo do dia</label>
+                  <label><input type="checkbox" checked disabled /> Vendas com data e hora</label>
+                  <label><input type="checkbox" checked disabled /> Vendas por vendedor</label>
+                  <label><input type="checkbox" checked disabled /> Formas de pagamento</label>
+                  <label><input type="checkbox" checked disabled /> Histórico de caixa</label>
+                  <label><input type="checkbox" checked disabled /> Produtos pendentes</label>
+                  <label><input type="checkbox" checked disabled /> Estoque baixo</label>
+                  <label><input type="checkbox" checked disabled /> Análise semanal, 1ª e 2ª quinzena, mensal, trimestral, semestral e anual</label>
+                </div>
+
+                <div class="drive-warning">
+                  Nesta etapa, o celular é apenas para consulta. A caixa continua sendo a computadora da loja.
+                  Isso evita erros e mantém o controle do negócio mais seguro.
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h2>Histórico de sincronização</h2>
+              <p class="muted">Registro de cada backup, sincronização e fusão realizada: data, hora, usuário e resultado.</p>
+              <div id="syncHistoryList"></div>
+              <button id="clearSyncHistoryBtn" class="btn ghost">Limpar histórico</button>
+            </div>
+          </div>
+
+          <div id="toolsTab" class="tab-content">
+            <div class="panel">
+              <h2>Fusionador Inteligente de Backups</h2>
+              <p class="muted">
+                Combine dois backups sem duplicar produtos, vendas, caixa, vendedores ou categorias.
+                Use quando duas máquinas (ou dois períodos) precisarem virar um único arquivo.
+              </p>
+              <div class="form-grid">
+                <label class="label">Backup Principal (base, tem prioridade em caso de conflito)</label>
+                <input id="mergePrimaryFile" type="file" accept=".json" class="input" />
+                <label class="label">Backup Secundário (o que será incorporado)</label>
+                <input id="mergeSecondaryFile" type="file" accept=".json" class="input" />
+                <button id="analyzeMergeBtn" class="btn primary full">Analisar</button>
+              </div>
+              <div id="mergeAnalysis"></div>
+              <button id="confirmMergeBtn" class="btn primary full hidden">Baixar Backup Fusionado</button>
+              <button id="applyMergeBtn" class="btn ghost full hidden">Usar como dados atuais deste computador</button>
+              <p class="tiny">Nada é duplicado: produtos, vendas, movimentos de caixa e vendedores são combinados pelo identificador único de cada registro. Nenhuma venda antiga é apagada.</p>
+            </div>
+          </div>
+
+          <div id="configTab" class="tab-content">
+            <div class="grid two">
+              <div class="panel">
+                <h2>Segurança (Firebase Auth)</h2>
+                <p class="muted">Conta conectada: <strong id="currentUserEmail">Não conectado</strong></p>
+                <div class="form-grid">
+                  <label class="label">Alterar senha da conta conectada</label>
+                  <input id="newAuthPassword" class="input" type="password" placeholder="Nova senha (mínimo 6 caracteres)" autocomplete="new-password" />
+                  <input id="confirmAuthPassword" class="input" type="password" placeholder="Confirmar nova senha" autocomplete="new-password" />
+                  <button id="updateAuthPasswordBtn" class="btn primary full" type="button">Atualizar senha no Firebase</button>
+                  <div id="authSecurityFeedback" class="tiny" style="margin-top:8px;font-weight:600;"></div>
+                </div>
+                <hr style="margin:16px 0;border:none;border-top:1px solid var(--border);" />
+                <p class="tiny">Para cadastrar novos caixas ou gerenciar perfis, acesse o painel oficial do <strong>Google Firebase Console &gt; Authentication</strong>.</p>
+              </div>
+              <div class="panel">
+                <h2>Regras de venda e estoque</h2>
+                <div class="form-grid">
+                  <label class="label">Alerta de estoque baixo (unidades)</label>
+                  <input id="cfgLowStock" class="input" type="number" min="0" step="1" />
+                  <label class="label">Desconto máximo permitido (%)</label>
+                  <input id="cfgMaxDiscount" class="input" type="number" min="0" max="100" step="1" />
+                  <button id="saveRulesBtn" class="btn primary full">Salvar regras</button>
+                </div>
+              </div>
+              <div class="panel">
+                <h2>Este computador</h2>
+                <p class="muted">Usado só para identificar as vendas quando você tiver mais de uma caixa. Fica salvo neste navegador, não faz parte do backup.</p>
+                <div class="form-grid">
+                  <label class="label">Nome deste computador</label>
+                  <input id="cfgDeviceName" class="input" placeholder="Exemplo: Caixa 1 - Frente" />
+                  <button id="saveDeviceNameBtn" class="btn primary full">Salvar nome</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h2>Histórico de ações</h2>
+              <p class="muted">Registro de mudanças sensíveis: produtos, vendas canceladas, vendedores, senhas e regras.</p>
+              <div id="actionHistoryList"></div>
+              <button id="clearActionHistoryBtn" class="btn ghost">Limpar histórico</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="printArea" class="print-only"></div>
+
+  <!-- Firebase SDKs (Compat v10 para Vanilla JS em GitHub Pages) -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <!-- Arquivo com credenciais do seu projeto Firebase -->
+  <script src="firebase-config.js"></script>
+  <!-- Backup inicial embutido para restauração ou primeira carga -->
+  <script src="BACKUP-FUSIONADO-BUNDLED.js"></script>
+  <!-- Aplicação principal -->
+  <script src="app.js"></script>
+</body>
+</html>

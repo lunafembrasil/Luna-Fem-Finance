@@ -1,0 +1,46 @@
+LUNA FEM FINANCE v0.4.2
+
+NOVIDADES:
+1. Painel Mobile com análises:
+   - semanal;
+   - mensal;
+   - trimestral;
+   - semestral;
+   - anual.
+   Novas abas no Google Sheets:
+   - Análises;
+   - Análises Vendedores;
+   - Análises Pagamentos.
+
+2. Administrador > Produtos:
+   - agora existe botão "Eliminar";
+   - aparece alerta de confirmação;
+   - o produto é removido permanentemente da lista de produtos;
+   - as vendas antigas com esse produto NÃO são apagadas.
+
+3. Abertura de caixa pelo Caixa:
+   - ao abrir caixa, a app agora também tenta salvar backup automático e sincronizar o Painel Mobile.
+
+4. Estoque:
+   - agora é permitido adicionar produto ao carrinho mesmo sem estoque;
+   - isso agiliza a venda;
+   - o estoque pode ficar negativo para o Administrador corrigir depois.
+
+COMO ATUALIZAR:
+1. Na versão atual, entre como Administrador.
+2. Faça Backup JSON.
+3. Extraia a v0.4.2 em uma nova pasta.
+4. Abra index.html da v0.4.2.
+5. Restaure o Backup JSON.
+6. Configure Google Drive e Painel Mobile se for necessário.
+
+ATUALIZAR APPS SCRIPT:
+1. Abra Google Sheets > Extensões > Apps Script.
+2. Apague todo o código anterior.
+3. Cole o conteúdo do arquivo:
+   apps_script_luna_fem_finance_v0_4_2_COMPATIBLE.txt
+4. Salve.
+5. Faça Nova implantação como Aplicativo da Web.
+6. Copie a nova URL.
+7. Cole em Luna Fem Finance > Administrador > Painel Mobile.
+8. Clique em Testar conexão e Sincronizar agora.

@@ -1,0 +1,215 @@
+LUNA FEM FINANCE v1.0 - GUIA COMPLETO DE USO
+==============================================
+Manual de ponta a ponta do sistema, da tela de login até o Resumo
+Anual. Para instruções de instalação/atualização, veja LEIA-ME-v1.0.txt.
+
+SUMÁRIO
+-------
+1. Login
+2. Tela do Caixa (dia a dia de vendas)
+3. Administrador > Início e Dashboard
+4. Administrador > Vendas (histórico e lançamento manual)
+5. Administrador > Caixa
+6. Administrador > Produtos (cadastro e importação em massa)
+7. Administrador > Clientes
+8. Administrador > Vendedores
+9. Administrador > Relatórios
+10. Administrador > Análises (por período, mensal, anual)
+11. Administrador > Backups
+12. Administrador > Sincronização (Drive, Painel Mobile, multi computador)
+13. Administrador > Ferramentas (Fusionador Inteligente)
+14. Administrador > Configurações (segurança, regras, histórico de ações)
+15. Perguntas frequentes
+
+------------------------------------------------------------
+1. LOGIN
+------------------------------------------------------------
+Ao abrir o app, escolha o perfil (Caixa ou Administrador) e digite a
+senha. As senhas padrão de fábrica são 0000 (Caixa) e 202320
+(Administrador) - troque-as em Configurações assim que possível.
+Tentativas de senha errada ficam registradas no Histórico de ações.
+
+------------------------------------------------------------
+2. TELA DO CAIXA
+------------------------------------------------------------
+- Abra o caixa informando o valor em dinheiro no início do dia.
+- Busque produtos por nome, categoria ou código, ou use "Produto
+  Rápido" para vender algo ainda não cadastrado (o Administrador
+  completa o custo depois, o que corrige o lucro e a comissão
+  retroativamente).
+- Escolha o vendedor responsável pela venda (usado para o cálculo de
+  comissão).
+- Preencha cliente/telefone (opcional), a forma de pagamento (inclusive
+  pagamento misto - dividindo o valor entre dinheiro, PIX, débito,
+  crédito e transferência) e um desconto, se necessário (limitado pelo
+  percentual máximo definido em Configurações).
+- "Finalizar venda". A venda é salva localmente na hora, gera backup
+  automático no Google Drive (se configurado) e tenta sincronizar com o
+  Painel Mobile - tudo isso sem depender de internet no momento da
+  venda (veja a seção de Sincronização).
+- Feche o caixa no fim do dia informando o valor contado - o sistema
+  calcula a diferença sozinho.
+
+------------------------------------------------------------
+3. ADMINISTRADOR > INÍCIO E DASHBOARD
+------------------------------------------------------------
+Início: resumo rápido do dia e atalhos para as áreas mais usadas.
+
+Dashboard: painel completo em tempo real, organizado em blocos:
+- Hoje: vendas, lucro, custos, ticket médio, vendas canceladas.
+- Operação: status do caixa, estoque baixo, produtos cadastrados.
+- Vendedores e comissões: melhor vendedor do dia, comissão estimada.
+- Médias históricas: média diária (30 dias) e média mensal (histórico).
+
+------------------------------------------------------------
+4. ADMINISTRADOR > VENDAS
+------------------------------------------------------------
+Lista completa do histórico de vendas, com opção de cancelar uma venda
+(devolve o estoque e pede confirmação).
+
+"+ Lançar venda manual": para registrar vendas esquecidas ou feitas por
+outro canal (telefone, por exemplo). Escolha data/hora (não permite
+data futura), vendedor, produtos e forma de pagamento. Entra no sistema
+exatamente como qualquer outra venda (conta para Dashboard, Análises,
+Clientes, backups), com uma etiqueta "Manual" para diferenciar.
+
+------------------------------------------------------------
+5. ADMINISTRADOR > CAIXA
+------------------------------------------------------------
+Histórico de todas as aberturas e fechamentos, com as diferenças
+encontradas, e um lugar para registrar entradas/retiradas manuais de
+dinheiro do caixa (com motivo).
+
+------------------------------------------------------------
+6. ADMINISTRADOR > PRODUTOS
+------------------------------------------------------------
+Cadastro de produtos e serviços: nome, categoria, tipo, custo, preço,
+estoque (permite estoque negativo, com alerta configurável), código
+interno, fornecedor e observações. A lista mostra a margem de lucro (%)
+de cada item.
+
+"+ Importar produtos em massa": cole os dados de uma planilha (ou
+selecione um arquivo .csv) com as colunas nome, categoria, tipo, custo,
+preco, estoque, sku, fornecedor, observacoes. Produtos com SKU já
+cadastrado são atualizados; os demais são criados. Nada é apagado.
+
+------------------------------------------------------------
+7. ADMINISTRADOR > CLIENTES
+------------------------------------------------------------
+Lista construída automaticamente a partir do nome/telefone informado em
+cada venda - não precisa cadastrar nada à parte. Mostra total gasto,
+quantidade de compras, ticket médio e data da última compra, ordenado
+por total gasto.
+
+------------------------------------------------------------
+8. ADMINISTRADOR > VENDEDORES
+------------------------------------------------------------
+Cadastro de vendedores com número, nome e uma comissão % local (usada
+no Dashboard). Vendedores podem ser desativados (somem da tela do
+Caixa, mas o histórico de vendas deles continua intacto) - nunca são
+excluídos, para não perder a rastreabilidade das vendas antigas.
+
+Nota: essa comissão % é uma estimativa local do app. A comissão
+"oficial" dos resumos no Google Sheets continua sendo editada
+diretamente na planilha "Config Comissões".
+
+------------------------------------------------------------
+9. ADMINISTRADOR > RELATÓRIOS
+------------------------------------------------------------
+Resumo geral, resumo por vendedor, vendas detalhadas com data/hora e
+histórico de caixa. Exportação em CSV, Excel, PDF e JSON.
+
+------------------------------------------------------------
+10. ADMINISTRADOR > ANÁLISES
+------------------------------------------------------------
+Três sub-abas:
+
+- Por período: Diário, Semanal, 1ª e 2ª Quinzena, Mensal, Trimestral,
+  Semestral e Anual, com setas para navegar entre períodos anteriores.
+  Cada período mostra vendas, lucro, custo, desconto, ticket médio,
+  cancelamentos, comparação com o período anterior, formas de
+  pagamento, vendedores, produtos mais vendidos e resumo de caixa -
+  tudo exportável em PDF/Excel/CSV/JSON.
+- Resumos Mensais: um card por mês com vendas, o mais recente sempre em
+  cima, com o detalhamento da 1ª e 2ª quinzena.
+- Resumo Anual: um card por ano, com todos os 12 meses e a comparação
+  percentual com o ano anterior.
+
+------------------------------------------------------------
+11. ADMINISTRADOR > BACKUPS
+------------------------------------------------------------
+Baixe uma cópia de segurança (.json) a qualquer momento, ou restaure um
+backup anterior (a restauração atualiza automaticamente o formato dos
+dados, mesmo vindo de uma versão bem antiga do sistema).
+
+------------------------------------------------------------
+12. ADMINISTRADOR > SINCRONIZAÇÃO
+------------------------------------------------------------
+- Este computador: dê um nome a cada máquina (em Configurações) para
+  identificar de onde vieram as vendas quando houver mais de uma caixa.
+- Nuvem / Google Drive: escolha uma pasta para backups automáticos.
+  Cada venda gera backup local nessa pasta, sem depender de internet
+  (a sincronização com a nuvem em si é feita pelo próprio Google Drive
+  Desktop, em segundo plano).
+- Painel Mobile / Google Sheets: configure a URL do Apps Script para
+  ver os relatórios pelo celular. Funciona com múltiplas contas Google,
+  já que usa uma URL + chave secreta, não login.
+- Histórico de sincronização: registro de cada backup e sincronização,
+  com data, hora, usuário e resultado.
+- "Verificar backups de outras máquinas agora": se você usa mais de um
+  computador com a mesma pasta do Drive, este botão traz para o
+  computador atual as vendas que só existiam no outro, sem duplicar
+  nada.
+- Modo offline: uma venda sem internet continua sendo salva
+  normalmente. A sincronização com o Painel Mobile que não deu certo
+  fica marcada como pendente e é reenviada sozinha assim que a conexão
+  voltar (o indicador Online/Offline no topo da tela mostra o status
+  atual).
+
+Importante sobre múltiplas caixas ao mesmo tempo: este sistema é
+offline por natureza (sem servidor central), então duas caixas não veem
+uma venda da outra em tempo real. A forma de manter tudo em uma base só
+é reconciliar periodicamente (pelo botão acima ou pelo Fusionador
+Inteligente) - não é o mesmo que um sistema com servidor central, e essa
+diferença já foi conversada durante o desenvolvimento.
+
+------------------------------------------------------------
+13. ADMINISTRADOR > FERRAMENTAS
+------------------------------------------------------------
+Fusionador Inteligente de Backups: combine dois arquivos de backup
+(Principal + Secundário) sem duplicar produtos, vendas, caixa,
+vendedores ou categorias. Útil para juntar as vendas de duas máquinas,
+ou dois períodos, em um único arquivo. Mostra uma análise antes de
+confirmar (quantos itens novos, quantos conflitos) e permite baixar o
+resultado ou já usá-lo como os dados deste computador.
+
+------------------------------------------------------------
+14. ADMINISTRADOR > CONFIGURAÇÕES
+------------------------------------------------------------
+- Segurança: trocar a senha do Administrador e do Caixa.
+- Regras: alerta de estoque baixo e desconto máximo permitido na venda.
+- Este computador: nome usado para identificar a máquina.
+- Histórico de ações: registro de produtos criados/editados/excluídos,
+  vendas canceladas, vendedores alterados, senhas trocadas, regras
+  alteradas e tentativas de login com senha errada - para auditoria.
+
+------------------------------------------------------------
+15. PERGUNTAS FREQUENTES
+------------------------------------------------------------
+"Perdi a internet, o sistema para de funcionar?"
+Não. Vendas continuam sendo registradas normalmente. O que depende de
+internet (sincronizar com o Google Sheets) fica pendente e se resolve
+sozinho quando a conexão voltar.
+
+"Posso usar duas caixas ao mesmo tempo?"
+Pode, mas elas não se veem em tempo real (não há servidor central).
+Reconcilie periodicamente com "Verificar backups de outras máquinas
+agora" ou o Fusionador Inteligente.
+
+"Uma senha ou configuração foi alterada sem eu saber?"
+Confira o Histórico de ações em Configurações.
+
+"Restaurei um backup antigo e alguma coisa sumiu?"
+Não deveria acontecer - a restauração sempre atualiza o formato dos
+dados automaticamente, preservando tudo. Se notar algo estranho, guarde
+o arquivo e peça ajuda antes de continuar usando o sistema.

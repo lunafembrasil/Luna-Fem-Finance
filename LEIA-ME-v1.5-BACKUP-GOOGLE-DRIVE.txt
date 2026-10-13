@@ -1,0 +1,33 @@
+LUNA FEM FINANCE V1.5 — BACKUP LEVE GOOGLE DRIVE
+
+Objetivo
+- Manter o backup diário pequeno, sem incluir histórico pesado de caixa/auditoria.
+- Salvar o backup leve na pasta escolhida do Google Drive.
+- Criar/atualizar um arquivo diário e também o arquivo "ultimo-backup-luna-fem-finance-light.json".
+- Verificar o arquivo depois da gravação, confirmando formato, quantidade de produtos e vendas.
+- Evitar duas gravações simultâneas.
+- Se o Drive falhar, a venda e a base local continuam intactas.
+
+Backup leve inclui:
+- settings
+- sellers
+- categories
+- products
+- sales
+
+Não inclui no backup diário:
+- cashHistory
+- cashSessions
+- syncHistory
+- actionHistory
+- currentUser
+- cashOpen
+
+O backup completo continua disponível separadamente para emergência.
+
+
+V1.5.2 - CORRECCION DE BACKUP AUTOMATICO
+- Revalida/renueva permiso de escritura de la carpeta antes del backup automatico.
+- Reintenta hasta 2 veces despues de una venta si el backup esta ocupado o falla transitoriamente.
+- Al configurar una carpeta, crea inmediatamente un backup ligero verificable.
+- Bundled backup actualizado al payload Google Drive del 15/08/2026: 403 ventas y 371 productos.

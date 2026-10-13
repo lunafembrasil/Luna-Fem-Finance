@@ -1,0 +1,39 @@
+LUNA FEM FINANCE v0.8 - LEIA-ME / MANUAL DE ATUALIZAÇÃO
+========================================================
+
+O QUE É ESTA VERSÃO
+--------------------
+Fase 4 do roteiro combinado rumo à V1.0: análises por período, resumos
+mensais e resumo anual, agora dentro do próprio app. Veja
+CHANGELOG-v0.8.txt para a lista completa.
+
+COMO ATUALIZAR
+--------------
+1. Backup primeiro: Administrador > Backups > "Baixar backup JSON".
+2. Substitua index.html, style.css e app.js pelos desta versão.
+3. Abra o index.html. Seus dados aparecem automaticamente.
+4. O Apps Script não muda nesta versão - não precisa mexer na planilha.
+
+COMO USAR A NOVA ABA "ANÁLISES"
+----------------------------------
+Administrador > Análises. Três sub-abas no topo:
+
+- "Por período": escolha Diário, Semanal, 1ª Quinzena, 2ª Quinzena,
+  Mensal, Trimestral, Semestral ou Anual. Use as setas "‹ Anterior" /
+  "Próximo ›" para ver períodos passados (por exemplo, o mês anterior).
+
+- "Resumos Mensais": role a lista para ver todos os meses que já tiveram
+  venda. Clique em um mês para abrir e ver o detalhamento completo,
+  incluindo a divisão entre 1ª e 2ª quinzena.
+
+- "Resumo Anual": mesma ideia, um card por ano, com o total de cada mês
+  e a comparação com o ano anterior.
+
+O CAIXA (TELA DE VENDA) MUDOU?
+--------------------------------
+Não. Essa novidade é só para o Administrador.
+
+SE ALGO DER ERRADO
+-------------------
+Restaure o backup salvo no passo 1 e me avise para eu corrigir antes de
+continuar para a próxima fase.

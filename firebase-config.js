@@ -1,3 +1,4 @@
+// Configuração do Firebase usando a versão Compat (v10)
 const firebaseConfig = {
   apiKey: "AIzaSyBxuyx5sLhlDICt4Iasb1-axm9SmJozUes",
   authDomain: "luna-fem-finance.firebaseapp.com",
@@ -7,3 +8,6 @@ const firebaseConfig = {
   appId: "1:674445961897:web:fb521b154d1fcb0eb997b8",
   measurementId: "G-CMC3MEHYNK"
 };
+
+// Inicializa o Firebase
+firebase.initializeApp(firebaseConfig);

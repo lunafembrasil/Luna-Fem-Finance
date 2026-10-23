@@ -4,8 +4,8 @@
 
 // Defina los dos únicos correos autorizados para acceder
 const ALLOWED_USERS = {
-  ADMIN: "admin@lunafem.com",   // Reemplazar por tu correo real de administrador
-  CASHIER: "caixa@lunafem.com"   // Reemplazar por tu correo real de cajero
+  ADMIN: "agustind301@gmail.com",   // Reemplazar por tu correo real de administrador
+  CASHIER: "lunafembrasil@gmail.com"   // Reemplazar por tu correo real de cajero
 };
 
 let currentUser = null;

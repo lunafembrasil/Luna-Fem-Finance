@@ -106,3 +106,54 @@ async function logout() {
     await firebase.auth().signOut();
   }
 }
+// =====================================================================
+// LECTURA DIRECTA Y EN TIEMPO REAL DESDE FIRESTORE
+// =====================================================================
+
+function startFirestoreLiveListeners() {
+  if (typeof firebase === 'undefined' || !firebase.firestore) return;
+  const dbInst = firebase.firestore();
+
+  // 1. Escuchar Catálogo de Productos
+  dbInst.collection("products").onSnapshot(snapshot => {
+    const loadedProducts = [];
+    snapshot.forEach(doc => loadedProducts.push(doc.data()));
+    
+    if (loadedProducts.length > 0) {
+      products = loadedProducts; // Reemplaza la memoria temporal con la verdad de Firestore
+      renderProducts();
+    }
+  }, err => console.warn("Error leyendo productos de Firestore:", err));
+
+  // 2. Escuchar Historial Completo de Ventas
+  dbInst.collection("sales").onSnapshot(snapshot => {
+    const loadedSales = [];
+    snapshot.forEach(doc => loadedSales.push(doc.data()));
+    
+    // Ordenar de la más reciente a la más antigua
+    loadedSales.sort((a, b) => (b.dateISO || "").localeCompare(a.dateISO || "") || (b.createdAt || "").localeCompare(a.createdAt || ""));
+    
+    updateDashboardMetrics(loadedSales);
+  }, err => console.warn("Error leyendo ventas de Firestore:", err));
+}
+
+// Actualizar métricas del Administrador con las ventas leídas de Firestore
+function updateDashboardMetrics(salesList) {
+  const todayISO = new Date().toISOString().slice(0, 10);
+  const todaySales = salesList.filter(s => s.dateISO === todayISO && !s.cancelled);
+  const todayTotal = todaySales.reduce((sum, s) => sum + Number(s.total || 0), 0);
+
+  const todayKpiEl = document.querySelector('#view-admin .dashboard-grid .kpi-card .value');
+  if (todayKpiEl) {
+    todayKpiEl.textContent = "R$ " + todayTotal.toLocaleString("pt-BR", { minimumFractionDigits: 2 });
+  }
+}
+
+// Llamar los listeners cuando el usuario autenticado entra
+const originalHandleAuthStateChanged = handleAuthStateChanged;
+handleAuthStateChanged = function(user) {
+  originalHandleAuthStateChanged(user);
+  if (user) {
+    startFirestoreLiveListeners();
+  }
+};

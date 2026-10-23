@@ -1,130 +1,108 @@
 // =====================================================================
-// LUNA FEM FINANCE v2 - MOTOR PRINCIPAL
+// LUNA FEM FINANCE v2 - AUTENTICACIÓN Y ROLES ESTRICTOS
 // =====================================================================
 
-// 1. ESTADO GLOBAL (Memoria temporal de la sesión)
-let cart = [];
-let products = [
-  // Productos de prueba iniciales (luego vendrán de Firestore)
-  { id: 'p1', name: 'Batom Matte', price: 19.90, stock: 15, type: 'produto' },
-  { id: 'p2', name: 'Paleta Sombras', price: 45.00, stock: 8, type: 'produto' },
-  { id: 'p3', name: 'Brinco Argola', price: 12.50, stock: 22, type: 'produto' },
-  { id: 'p4', name: 'Serviço Impressão', price: 2.00, stock: 0, type: 'servico' }
-];
+// Defina los dos únicos correos autorizados para acceder
+const ALLOWED_USERS = {
+  ADMIN: "admin@lunafem.com",   // Reemplazar por tu correo real de administrador
+  CASHIER: "caixa@lunafem.com"   // Reemplazar por tu correo real de cajero
+};
 
-// 2. LÓGICA DE ARQUEO FÍSICO (Billetes y Alquiler)
-const billInputs = document.querySelectorAll('.bill-item input');
-const rentFundInput = document.querySelector('.fund-section input');
+let currentUser = null;
 
-function calculatePhysicalCash() {
-  const multipliers = [200, 100, 50, 20, 10, 5, 2, 1]; // El último "1" es para las monedas (valor exacto)
-  let totalCash = 0;
-
-  billInputs.forEach((input, index) => {
-    const qty = Number(input.value) || 0;
-    totalCash += qty * multipliers[index];
-  });
-
-  const rentFund = Number(rentFundInput?.value) || 0;
-  const netCash = totalCash - rentFund; // Dinero real disponible restando lo apartado para Dios/Alquiler
-
-  // Aquí actualizaremos el panel de resumen (lo conectaremos al HTML en el próximo paso)
-  console.log(`Total Billetes: R$ ${totalCash.toFixed(2)} | Fondo Alquiler: R$ ${rentFund.toFixed(2)} | Caja Neta: R$ ${netCash.toFixed(2)}`);
-  return { totalCash, rentFund, netCash };
-}
-
-// Escuchar cambios en los billetes para calcular en tiempo real
-billInputs.forEach(input => input.addEventListener('input', calculatePhysicalCash));
-if (rentFundInput) rentFundInput.addEventListener('input', calculatePhysicalCash);
-
-
-// 3. LÓGICA DEL PUNTO DE VENTA (Carrito y Productos)
-function renderProducts() {
-  const grid = document.querySelector('.product-grid');
-  if (!grid) return;
-  
-  grid.innerHTML = products.map(p => `
-    <div class="product-card" onclick="addToCart('${p.id}')" ${p.type === 'servico' ? 'style="border-style: dashed;"' : ''}>
-      <h4>${p.name}</h4>
-      <p>R$ ${p.price.toFixed(2)}</p>
-      <small>${p.type === 'servico' ? 'Serviço' : 'Estoque: ' + p.stock}</small>
-    </div>
-  `).join('');
-}
-
-function addToCart(productId) {
-  const product = products.find(p => p.id === productId);
-  if (!product) return;
-
-  const existingItem = cart.find(item => item.id === productId);
-  if (existingItem) {
-    existingItem.qty += 1;
-  } else {
-    cart.push({ ...product, qty: 1 });
+// Escuchar estado de autenticación en Firebase
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof firebase !== 'undefined' && firebase.auth) {
+    firebase.auth().onAuthStateChanged(handleAuthStateChanged);
   }
-  renderCart();
-}
+});
 
-function renderCart() {
-  const cartContainer = document.querySelector('.cart-items');
-  const totalsArea = document.querySelector('.totals-area');
-  
-  if (!cartContainer || !totalsArea) return;
+async function login() {
+  const emailInput = document.getElementById('loginEmail');
+  const passwordInput = document.getElementById('loginPassword');
+  const feedback = document.getElementById('loginFeedback');
+  const loginBtn = document.getElementById('loginBtn');
 
-  // Renderizar items
-  cartContainer.innerHTML = cart.map(item => `
-    <div class="cart-item-row">
-      <div class="cart-item-info">
-        <div class="cart-item-title">${item.name}</div>
-        <div class="cart-item-qty">${item.qty} un. x R$ ${item.price.toFixed(2)}</div>
-      </div>
-      <div class="cart-item-price">R$ ${(item.qty * item.price).toFixed(2)}</div>
-    </div>
-  `).join('');
+  const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
+  const password = passwordInput ? passwordInput.value : "";
 
-  // Calcular totales
-  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-  const discountInput = document.querySelector('.totals-area input[type="number"]');
-  const discountPercent = Number(discountInput?.value) || 0;
-  const discountAmount = subtotal * (discountPercent / 100);
-  const total = subtotal - discountAmount;
-
-  // Renderizar totales
-  totalsArea.innerHTML = `
-    <div class="total-row"><span>Subtotal</span><span>R$ ${subtotal.toFixed(2)}</span></div>
-    <div class="total-row">
-      <span style="display: flex; align-items: center; gap: 10px;">Desconto % 
-        <input type="number" class="input" style="width: 70px; padding: 5px; height: 30px;" value="${discountPercent}" onchange="renderCart()" min="0" max="100">
-      </span>
-      <span>- R$ ${discountAmount.toFixed(2)}</span>
-    </div>
-    <div class="total-row grand-total"><span>Total a Cobrar</span><span>R$ ${total.toFixed(2)}</span></div>
-  `;
-}
-
-// 4. CONEXIÓN A FIRESTORE (El nuevo estándar)
-async function saveSale(saleData) {
-  // Asegúrate de tener inicializado Firebase en tu index.html
-  if (typeof firebase === 'undefined') {
-    alert("Firebase no está conectado aún.");
+  if (!email || !password) {
+    feedback.textContent = "Ingresa tu correo y contraseña.";
     return;
   }
-  
+
+  // Filtrado previo antes de intentar autenticar
+  if (email !== ALLOWED_USERS.ADMIN.toLowerCase() && email !== ALLOWED_USERS.CASHIER.toLowerCase()) {
+    feedback.textContent = "Este correo no está autorizado para ingresar.";
+    return;
+  }
+
   try {
-    const db = firebase.firestore();
-    // Guardamos la venta directo en la nube sin pasar por cachés intermedias
-    await db.collection("sales").doc(saleData.id).set(saleData);
-    alert("¡Venta registrada con éxito en la roca firme de Firestore!");
-    cart = []; // Limpiamos carrito
-    renderCart();
+    loginBtn.disabled = true;
+    loginBtn.textContent = "Verificando...";
+    feedback.textContent = "";
+
+    await firebase.auth().signInWithEmailAndPassword(email, password);
   } catch (error) {
-    console.error("Error al guardar venta: ", error);
-    alert("Hubo un error al registrar la venta. Revisa los permisos de Firestore.");
+    console.error("Error en autenticación:", error);
+    if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+      feedback.textContent = "Correo o contraseña incorrectos.";
+    } else {
+      feedback.textContent = "Error de conexión con Firebase.";
+    }
+  } finally {
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Entrar al Sistema";
   }
 }
 
-// Inicializar la vista
-document.addEventListener('DOMContentLoaded', () => {
-  renderProducts();
-  renderCart();
-});
+function handleAuthStateChanged(user) {
+  const viewLogin = document.getElementById('view-login');
+  const viewCashier = document.getElementById('view-cashier');
+  const viewAdmin = document.getElementById('view-admin');
+  const userBadge = document.getElementById('userBadge');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  // Ocultar todas las pantallas por defecto
+  [viewLogin, viewCashier, viewAdmin].forEach(s => s?.classList.remove('active'));
+
+  if (user) {
+    const userEmail = user.email.toLowerCase();
+    currentUser = user;
+
+    if (logoutBtn) logoutBtn.style.display = 'block';
+
+    // RUTA 1: ES ADMINISTRADOR
+    if (userEmail === ALLOWED_USERS.ADMIN.toLowerCase()) {
+      viewAdmin.classList.add('active');
+      if (userBadge) userBadge.textContent = "Perfil: Administrador (" + user.email + ")";
+    } 
+    // RUTA 2: ES CAJERO
+    else if (userEmail === ALLOWED_USERS.CASHIER.toLowerCase()) {
+      viewCashier.classList.add('active');
+      if (userBadge) userBadge.textContent = "Perfil: Cajero (" + user.email + ")";
+    } 
+    // RUTA 3: USUARIO NO AUTORIZADO
+    else {
+      alert("Acceso denegado: Tu usuario no pertenece a la lista de accesos de LunaFem Finance.");
+      logout();
+      return;
+    }
+
+    renderProducts();
+    renderCart();
+
+  } else {
+    // SIN SESIÓN -> PANTALLA DE LOGIN
+    currentUser = null;
+    viewLogin.classList.add('active');
+    if (userBadge) userBadge.textContent = "Sin Sesión";
+    if (logoutBtn) logoutBtn.style.display = 'none';
+  }
+}
+
+async function logout() {
+  if (typeof firebase !== 'undefined' && firebase.auth) {
+    await firebase.auth().signOut();
+  }
+}

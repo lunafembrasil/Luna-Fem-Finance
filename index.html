@@ -107,6 +107,17 @@
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+    /* Estilos para la tabla de historial de ventas */
+    .sales-table-container { overflow-x: auto; margin-top: 15px; }
+    .sales-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .sales-table th, .sales-table td { padding: 12px 15px; border-bottom: 1px solid var(--border); }
+    .sales-table th { background-color: var(--pink-light); color: var(--pink-dark); font-weight: 600; font-size: 0.9rem; }
+    .sales-table tr:hover { background-color: #f9f9f9; }
+    .sales-table td { font-size: 0.95rem; color: var(--text); }
+    .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
+    .status-completed { background: #E6FFFA; color: var(--positive); }
+    .status-cancelled { background: #FFF5F5; color: var(--negative); }
   </style>
 </head>
 <body>
@@ -236,7 +247,7 @@
     <div class="admin-nav">
       <div class="admin-tab active" onclick="switchAdminTab('dashboard')">Dashboard General</div>
       <div class="admin-tab" onclick="switchAdminTab('manual-sale')">Venta Manual Atrasada</div>
-      <div class="admin-tab">Ventas Históricas (<span id="totalSalesCount">0</span>)</div>
+      <div class="admin-tab" onclick="switchAdminTab('historical-sales')">Ventas Históricas (<span id="totalSalesCount">0</span>)</div>
     </div>
 
     <!-- Dashboard View -->
@@ -299,6 +310,30 @@
         </div>
       </div>
     </div>
+    
+    <!-- Historical Sales View -->
+    <div id="admin-historical-sales-view" style="display: none;">
+        <div class="panel">
+            <h2 style="color: var(--pink-dark); margin-bottom: 15px;">Historial de Ventas</h2>
+            <div class="sales-table-container">
+                <table class="sales-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>ID Venta</th>
+                            <th>Total</th>
+                            <th>Método</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historicalSalesTableBody">
+                        <!-- Las filas se insertarán aquí dinámicamente -->
+                        <tr><td colspan="5" style="text-align: center;">Cargando historial de ventas...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
   </main>
 
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
@@ -316,10 +351,17 @@
       if (tabName === 'dashboard') {
         document.getElementById('admin-dashboard-view').style.display = 'block';
         document.getElementById('admin-manual-sale-view').style.display = 'none';
+        document.getElementById('admin-historical-sales-view').style.display = 'none';
       } else if (tabName === 'manual-sale') {
         document.getElementById('admin-dashboard-view').style.display = 'none';
         document.getElementById('admin-manual-sale-view').style.display = 'block';
+        document.getElementById('admin-historical-sales-view').style.display = 'none';
         renderManualProducts();
+      } else if (tabName === 'historical-sales') {
+        document.getElementById('admin-dashboard-view').style.display = 'none';
+        document.getElementById('admin-manual-sale-view').style.display = 'none';
+        document.getElementById('admin-historical-sales-view').style.display = 'block';
+        renderHistoricalSales();
       }
     }
   </script>

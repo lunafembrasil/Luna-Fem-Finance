@@ -1,5 +1,5 @@
 // =====================================================================
-// LUNA FEM FINANCE v2 - LECTURA EN TIEMPO REAL DESDE FIRESTORE
+// LUNA FEM FINANCE v2 - MOTOR PRINCIPAL Y BÚSQUEDA EN TIEMPO REAL
 // =====================================================================
 
 const ALLOWED_USERS = {
@@ -8,9 +8,12 @@ const ALLOWED_USERS = {
 };
 
 let currentUser = null;
-let cart = [];
-let products = []; // Se llenará desde Firestore
-let allSales = []; // Aquí caerán tus 616+ ventas
+let cart = []; // Carrito del Cajero
+let manualCart = []; // Carrito de Venta Manual
+let products = []; // Catálogo maestro
+let filteredProducts = []; // Para búsqueda de cajero
+let manualFilteredProducts = []; // Para búsqueda manual
+let allSales = []; 
 
 document.addEventListener('DOMContentLoaded', () => {
   if (typeof firebase !== 'undefined' && firebase.auth) {
@@ -90,7 +93,6 @@ function handleAuthStateChanged(user) {
       return;
     }
     
-    // Iniciar conexión con Firestore una vez autenticado
     startFirestoreLiveListeners();
 
   } else {
@@ -106,20 +108,32 @@ async function logout() {
     await firebase.auth().signOut();
   }
 }
+
 // ---------------------------------------------------------------------
-// CONEXIÓN A FIRESTORE (Lectura de las 616+ ventas y productos)
+// CONEXIÓN A FIRESTORE
 // ---------------------------------------------------------------------
 function startFirestoreLiveListeners() {
+  if (typeof firebase === 'undefined' || !firebase.firestore) return;
   const db = firebase.firestore();
 
-  // 1. Escuchar Catálogo de Productos
+  // Escuchar Catálogo
   db.collection("products").onSnapshot(snapshot => {
     products = [];
-    snapshot.forEach(doc => products.push(doc.data()));
+    snapshot.forEach(doc => {
+      const p = doc.data();
+      if (!p.id) p.id = doc.id;
+      products.push(p);
+    });
+    
+    // Inicializar listas de búsqueda con todos los productos
+    filteredProducts = [...products]; 
+    manualFilteredProducts = [...products];
+    
     renderProducts();
-  }, err => alert("❌ Error en Productos: " + err.message));
+    renderManualProducts();
+  }, err => console.warn("Aviso en Productos:", err));
 
-  // 2. Escuchar Historial de Ventas
+  // Escuchar Ventas
   db.collection("sales").onSnapshot(snapshot => {
     allSales = [];
     let canceladas = 0;
@@ -137,54 +151,105 @@ function startFirestoreLiveListeners() {
     if (kpiCanceladas) kpiCanceladas.textContent = canceladas;
 
     updateAdminDashboard(allSales);
-
-    // Aviso si la conexión es exitosa pero la colección está vacía
-    if (allSales.length === 0) {
-      console.warn("Conexión exitosa, pero la colección 'sales' está vacía o no existe.");
-    }
-  }, err => alert("❌ Error en Ventas: " + err.message));
-}
-// ---------------------------------------------------------------------
-// LÓGICA DE CAJA Y PUNTO DE VENTA (POS)
-// ---------------------------------------------------------------------
-function calculatePhysicalCash() {
-  const billInputs = document.querySelectorAll('.bill-item input');
-  const rentFundInput = document.querySelector('.fund-section input');
-  const multipliers = [200, 100, 50, 20, 10, 5, 2, 1];
-  let totalCash = 0;
-
-  billInputs.forEach((input, index) => {
-    totalCash += (Number(input.value) || 0) * multipliers[index];
-  });
-  return totalCash;
+  }, err => console.warn("Aviso en Ventas:", err));
 }
 
+function updateAdminDashboard(salesData) {
+  const todayISO = new Date().toISOString().split('T')[0];
+  const todaySales = salesData.filter(s => 
+    (s.dateISO === todayISO || (s.date && s.date.includes(todayISO))) && 
+    (s.status !== 'cancelled' && s.cancelled !== true)
+  );
+
+  const totalToday = todaySales.reduce((sum, s) => sum + Number(s.total || 0), 0);
+  
+  const kpiHoy = document.getElementById('kpi-ventas-hoy');
+  if (kpiHoy) kpiHoy.textContent = `R$ ${totalToday.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+}
+
+// ---------------------------------------------------------------------
+// BÚSQUEDA Y FILTRADO EN TIEMPO REAL
+// ---------------------------------------------------------------------
+function filterProducts(query) {
+  const q = query.toLowerCase().trim();
+  if (!q) {
+    filteredProducts = [...products];
+  } else {
+    filteredProducts = products.filter(p => 
+      p.name.toLowerCase().includes(q) || 
+      (p.categoria && p.categoria.toLowerCase().includes(q)) || 
+      (p.barcode && String(p.barcode).includes(q))
+    );
+  }
+  renderProducts();
+}
+
+function filterManualProducts(query) {
+  const q = query.toLowerCase().trim();
+  if (!q) {
+    manualFilteredProducts = [...products];
+  } else {
+    manualFilteredProducts = products.filter(p => 
+      p.name.toLowerCase().includes(q) || 
+      (p.categoria && p.categoria.toLowerCase().includes(q)) || 
+      (p.barcode && String(p.barcode).includes(q))
+    );
+  }
+  renderManualProducts();
+}
+
+// ---------------------------------------------------------------------
+// POS (CAJERO) - RENDERIZADO Y CARRITO
+// ---------------------------------------------------------------------
 function renderProducts() {
   const grid = document.getElementById('posProductGrid');
   if (!grid) return;
   
-  if (products.length === 0) {
-    grid.innerHTML = `<p style="color: var(--text-muted); grid-column: 1/-1;">Cargando productos de Firestore...</p>`;
+  if (filteredProducts.length === 0) {
+    grid.innerHTML = `<p style="color: var(--text-muted); grid-column: 1/-1;">No se encontraron productos.</p>`;
     return;
   }
 
-  grid.innerHTML = products.map(p => `
-    <div class="product-card" onclick="addToCart('${p.id}')">
+  grid.innerHTML = filteredProducts.map(p => `
+    <div class="product-card" onclick="addToCart('${p.id}', false)">
       <h4 style="font-size: 0.95rem;">${escapeHTML(p.name)}</h4>
       <p style="color: var(--gold); font-weight: 700;">R$ ${Number(p.price || 0).toFixed(2)}</p>
-      <small style="color: var(--text-muted);">${p.stock > 0 ? 'Stock: ' + p.stock : 'Sin stock'}</small>
     </div>
   `).join('');
 }
 
-function addToCart(productId) {
+function addToCart(productId, isManual) {
   const product = products.find(p => p.id === productId);
   if (!product) return;
 
-  const existingItem = cart.find(item => item.id === productId);
+  const targetCart = isManual ? manualCart : cart;
+  const existingItem = targetCart.find(item => item.id === productId);
+  
   if (existingItem) { existingItem.qty += 1; } 
-  else { cart.push({ ...product, qty: 1 }); }
-  renderCart();
+  else { targetCart.push({ ...product, qty: 1, discount: 0 }); }
+  
+  if (isManual) renderManualCart();
+  else renderCart();
+}
+
+function removeFromCart(productId, isManual) {
+  if (isManual) {
+    manualCart = manualCart.filter(item => item.id !== productId);
+    renderManualCart();
+  } else {
+    cart = cart.filter(item => item.id !== productId);
+    renderCart();
+  }
+}
+
+function updateItemDiscount(productId, discountValue, isManual) {
+  const targetCart = isManual ? manualCart : cart;
+  const item = targetCart.find(i => i.id === productId);
+  if (item) {
+    item.discount = Number(discountValue) || 0;
+    if (isManual) renderManualCart();
+    else renderCart();
+  }
 }
 
 function renderCart() {
@@ -192,21 +257,97 @@ function renderCart() {
   const totalsArea = document.querySelector('.totals-area');
   if (!cartContainer || !totalsArea) return;
 
-  cartContainer.innerHTML = cart.length ? cart.map(item => `
-    <div class="cart-item-row">
-      <div class="cart-item-info">
+  cartContainer.innerHTML = cart.length ? cart.map(item => {
+    const itemTotal = (item.price * item.qty) - (item.discount || 0);
+    return `
+    <div class="cart-item-row" style="align-items: flex-start; margin-bottom: 15px;">
+      <div class="cart-item-info" style="flex: 1;">
         <div class="cart-item-title">${escapeHTML(item.name)}</div>
-        <div class="cart-item-qty">${item.qty} un. x R$ ${Number(item.price).toFixed(2)}</div>
+        <div class="cart-item-qty" style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
+          <span>${item.qty} un. x R$ ${Number(item.price).toFixed(2)}</span>
+          <span style="font-size: 0.8rem; color: var(--pink-dark);">Desc R$ <input type="number" value="${item.discount || 0}" style="width: 50px; padding: 2px; border: 1px solid var(--border); border-radius: 4px;" onchange="updateItemDiscount('${item.id}', this.value, false)"></span>
+        </div>
       </div>
-      <div class="cart-item-price">R$ ${(item.qty * item.price).toFixed(2)}</div>
+      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+        <button class="remove-btn" onclick="removeFromCart('${item.id}', false)">✖</button>
+        <div class="cart-item-price">R$ ${itemTotal.toFixed(2)}</div>
+      </div>
     </div>
-  `).join('') : '<p style="color: var(--text-muted); text-align: center; font-size: 0.9rem;">Ningún producto seleccionado</p>';
+  `}).join('') : '<p style="color: var(--text-muted); text-align: center; font-size: 0.9rem;">Ningún producto seleccionado</p>';
 
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const totalDescuentos = cart.reduce((sum, item) => sum + (item.discount || 0), 0);
+  const total = subtotal - totalDescuentos;
+
   totalsArea.innerHTML = `
     <div class="total-row"><span>Subtotal</span><span>R$ ${subtotal.toFixed(2)}</span></div>
-    <div class="total-row grand-total"><span>Total a Cobrar</span><span>R$ ${subtotal.toFixed(2)}</span></div>
+    <div class="total-row"><span>Descuentos (Items)</span><span style="color: var(--pink-dark);">- R$ ${totalDescuentos.toFixed(2)}</span></div>
+    <div class="total-row grand-total"><span>Total a Cobrar</span><span>R$ ${total.toFixed(2)}</span></div>
   `;
+}
+
+// ---------------------------------------------------------------------
+// VENTA MANUAL (ADMIN)
+// ---------------------------------------------------------------------
+function renderManualProducts() {
+  const grid = document.getElementById('manualProductGrid');
+  if (!grid) return;
+  
+  if (manualFilteredProducts.length === 0) {
+    grid.innerHTML = `<p style="color: var(--text-muted); grid-column: 1/-1;">No se encontraron productos.</p>`;
+    return;
+  }
+
+  grid.innerHTML = manualFilteredProducts.map(p => `
+    <div class="product-card" onclick="addToCart('${p.id}', true)">
+      <h4 style="font-size: 0.95rem;">${escapeHTML(p.name)}</h4>
+      <p style="color: var(--gold); font-weight: 700;">R$ ${Number(p.price || 0).toFixed(2)}</p>
+    </div>
+  `).join('');
+}
+
+function renderManualCart() {
+  const cartContainer = document.getElementById('manualCartItems');
+  const totalsArea = document.getElementById('manualTotalsArea');
+  if (!cartContainer || !totalsArea) return;
+
+  cartContainer.innerHTML = manualCart.length ? manualCart.map(item => {
+    const itemTotal = (item.price * item.qty) - (item.discount || 0);
+    return `
+    <div class="cart-item-row" style="align-items: flex-start; margin-bottom: 15px;">
+      <div class="cart-item-info" style="flex: 1;">
+        <div class="cart-item-title">${escapeHTML(item.name)}</div>
+        <div class="cart-item-qty" style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
+          <span>${item.qty} un. x R$ ${Number(item.price).toFixed(2)}</span>
+          <span style="font-size: 0.8rem; color: var(--pink-dark);">Desc R$ <input type="number" value="${item.discount || 0}" style="width: 50px; padding: 2px; border: 1px solid var(--border); border-radius: 4px;" onchange="updateItemDiscount('${item.id}', this.value, true)"></span>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+        <button class="remove-btn" onclick="removeFromCart('${item.id}', true)">✖</button>
+        <div class="cart-item-price">R$ ${itemTotal.toFixed(2)}</div>
+      </div>
+    </div>
+  `}).join('') : '<p style="color: var(--text-muted); text-align: center; font-size: 0.9rem;">Ningún producto seleccionado</p>';
+
+  const subtotal = manualCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  const totalDescuentos = manualCart.reduce((sum, item) => sum + (item.discount || 0), 0);
+  const total = subtotal - totalDescuentos;
+
+  totalsArea.innerHTML = `
+    <div class="total-row"><span>Subtotal</span><span>R$ ${subtotal.toFixed(2)}</span></div>
+    <div class="total-row"><span>Descuentos</span><span style="color: var(--pink-dark);">- R$ ${totalDescuentos.toFixed(2)}</span></div>
+    <div class="total-row grand-total" style="font-size: 1.2rem;"><span>Total Venta Manual</span><span>R$ ${total.toFixed(2)}</span></div>
+  `;
+}
+
+function calculatePhysicalCash() {
+  const billInputs = document.querySelectorAll('.bill-item input');
+  let totalCash = 0;
+  const multipliers = [200, 100, 50, 20, 10, 5, 2, 1];
+  billInputs.forEach((input, index) => {
+    totalCash += (Number(input.value) || 0) * multipliers[index];
+  });
+  return totalCash;
 }
 
 function escapeHTML(str) {

@@ -106,7 +106,6 @@ async function logout() {
     await firebase.auth().signOut();
   }
 }
-
 // ---------------------------------------------------------------------
 // CONEXIÓN A FIRESTORE (Lectura de las 616+ ventas y productos)
 // ---------------------------------------------------------------------
@@ -118,7 +117,7 @@ function startFirestoreLiveListeners() {
     products = [];
     snapshot.forEach(doc => products.push(doc.data()));
     renderProducts();
-  }, err => console.error("Error cargando productos:", err));
+  }, err => alert("❌ Error en Productos: " + err.message));
 
   // 2. Escuchar Historial de Ventas
   db.collection("sales").onSnapshot(snapshot => {
@@ -138,23 +137,13 @@ function startFirestoreLiveListeners() {
     if (kpiCanceladas) kpiCanceladas.textContent = canceladas;
 
     updateAdminDashboard(allSales);
-  }, err => console.error("Error cargando ventas:", err));
+
+    // Aviso si la conexión es exitosa pero la colección está vacía
+    if (allSales.length === 0) {
+      console.warn("Conexión exitosa, pero la colección 'sales' está vacía o no existe.");
+    }
+  }, err => alert("❌ Error en Ventas: " + err.message));
 }
-
-function updateAdminDashboard(salesData) {
-  // Filtrar ventas de HOY
-  const todayISO = new Date().toISOString().split('T')[0];
-  const todaySales = salesData.filter(s => 
-    (s.dateISO === todayISO || (s.date && s.date.includes(todayISO))) && 
-    (s.status !== 'cancelled' && s.cancelled !== true)
-  );
-
-  const totalToday = todaySales.reduce((sum, s) => sum + Number(s.total || 0), 0);
-  
-  const kpiHoy = document.getElementById('kpi-ventas-hoy');
-  if (kpiHoy) kpiHoy.textContent = `R$ ${totalToday.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-}
-
 // ---------------------------------------------------------------------
 // LÓGICA DE CAJA Y PUNTO DE VENTA (POS)
 // ---------------------------------------------------------------------

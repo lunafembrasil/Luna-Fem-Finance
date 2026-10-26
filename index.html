@@ -89,6 +89,10 @@
     .cart-area { background: var(--surface); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow-y: auto; }
     .cart-items { flex: 1; border-bottom: 2px dashed var(--border); margin-bottom: 20px; padding-bottom: 10px; overflow-y: auto; }
     .cart-item-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    
+    /* Botón de eliminar del carrito */
+    .remove-btn { background: none; border: none; color: var(--negative); cursor: pointer; font-size: 1.1rem; padding: 0 5px; transition: transform 0.2s; }
+    .remove-btn:hover { transform: scale(1.2); }
 
     .admin-nav { display: flex; gap: 15px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 5px; }
     .admin-tab { padding: 12px 24px; cursor: pointer; font-weight: 600; color: var(--text-muted); border-radius: 30px; background: var(--surface); border: 1px solid var(--border); white-space: nowrap; }
@@ -188,7 +192,8 @@
     <div class="pos-layout">
       <div class="products-area">
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-          <input type="text" class="input" placeholder="Buscar producto, categoría o código..." style="flex: 1;">
+          <!-- Barra de Búsqueda Mejorada -->
+          <input type="text" id="searchInput" class="input" placeholder="🔍 Buscar producto, categoría o código..." style="flex: 1;" oninput="filterProducts(this.value)">
           <button class="btn btn-outline">+ Producto Rápido</button>
         </div>
         <div class="product-grid" id="posProductGrid"></div>
@@ -227,40 +232,71 @@
       <span style="background: var(--gold-light); color: #8C6D00; font-weight: 700; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem;">Conectado a Firestore ☁️</span>
     </div>
 
-    <div class="manual-sale-banner">
-      <div>
-        <h2>Venta Manual Atrasada</h2>
-        <p>"El que camina en integridad anda confiado" (Prov. 10:9). Registra ventas pasadas con fecha exacta.</p>
-      </div>
-      <button class="btn btn-primary" style="background: var(--surface); color: var(--gold); font-size: 1rem;">+ Lanzar Venta Manual</button>
-    </div>
-
+    <!-- Secciones del Panel Admin -->
     <div class="admin-nav">
-      <div class="admin-tab active">Dashboard General</div>
+      <div class="admin-tab active" onclick="switchAdminTab('dashboard')">Dashboard General</div>
+      <div class="admin-tab" onclick="switchAdminTab('manual-sale')">Venta Manual Atrasada</div>
       <div class="admin-tab">Ventas Históricas (<span id="totalSalesCount">0</span>)</div>
-      <div class="admin-tab">Catálogo Premium</div>
-      <div class="admin-tab">Análisis Anual y Meses</div>
     </div>
 
-    <div class="dashboard-grid">
-      <div class="kpi-card">
-        <h3>Total Ventas (Hoy)</h3>
-        <div class="value" id="kpi-ventas-hoy">R$ 0.00</div>
+    <!-- Dashboard View -->
+    <div id="admin-dashboard-view">
+      <div class="dashboard-grid">
+        <div class="kpi-card">
+          <h3>Total Ventas (Hoy)</h3>
+          <div class="value" id="kpi-ventas-hoy">R$ 0.00</div>
+        </div>
+        <div class="kpi-card" style="border-left-color: var(--gold);">
+          <h3>Fondo de Alquiler Acumulado</h3>
+          <div class="value" id="kpi-fondo-alquiler">R$ 0.00</div>
+        </div>
+        <div class="kpi-card" style="border-left-color: var(--negative);">
+          <h3>Ventas Canceladas (Total)</h3>
+          <div class="value" style="color: var(--negative);" id="kpi-canceladas">0</div>
+        </div>
       </div>
-      <div class="kpi-card" style="border-left-color: var(--gold);">
-        <h3>Fondo de Alquiler Acumulado</h3>
-        <div class="value" id="kpi-fondo-alquiler">R$ 0.00</div>
-      </div>
-      <div class="kpi-card" style="border-left-color: var(--negative);">
-        <h3>Ventas Canceladas (Total)</h3>
-        <div class="value" style="color: var(--negative);" id="kpi-canceladas">0</div>
+
+      <div class="panel">
+        <h2 style="color: var(--pink-dark); margin-bottom: 15px;">Comparativa y Proyecciones</h2>
+        <div style="height: 250px; background: var(--bg); border: 2px dashed var(--border); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+          [ Gráficos en tiempo real ]
+        </div>
       </div>
     </div>
 
-    <div class="panel">
-      <h2 style="color: var(--pink-dark); margin-bottom: 15px;">Comparativa y Proyecciones</h2>
-      <div style="height: 250px; background: var(--bg); border: 2px dashed var(--border); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
-        [ Gráficos en tiempo real ]
+    <!-- Manual Sale View -->
+    <div id="admin-manual-sale-view" style="display: none;">
+      <div class="panel" style="border: 2px solid var(--gold);">
+        <h2 style="color: var(--gold); margin-bottom: 5px;">Lanzar Venta Manual Atrasada</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">"El que camina en integridad anda confiado" (Prov. 10:9).</p>
+        
+        <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+          <div class="input-group" style="flex: 1; margin: 0;">
+            <label>Fecha de la Venta</label>
+            <input type="date" class="input" id="manualSaleDate">
+          </div>
+          <div class="input-group" style="flex: 1; margin: 0;">
+            <label>Método de Pago</label>
+            <select class="input">
+              <option value="dinheiro">Dinheiro</option>
+              <option value="pix">PIX</option>
+              <option value="cartao">Cartão</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+          <!-- Barra de Búsqueda Mejorada para Venta Manual -->
+          <input type="text" id="manualSearchInput" class="input" placeholder="🔍 Buscar producto..." style="flex: 1;" oninput="filterManualProducts(this.value)">
+        </div>
+        
+        <div class="product-grid" id="manualProductGrid" style="max-height: 200px; margin-bottom: 20px;"></div>
+
+        <div class="cart-area" style="box-shadow: none; border: 1px solid var(--border);">
+          <div class="cart-items" id="manualCartItems"></div>
+          <div class="totals-area" id="manualTotalsArea"></div>
+          <button class="btn btn-gold btn-full" style="font-size: 1.1rem; padding: 15px;" onclick="alert('Venta manual registrada')">Guardar Venta Manual</button>
+        </div>
       </div>
     </div>
   </main>
@@ -271,5 +307,21 @@
   
   <script src="firebase-config.js"></script>
   <script src="app.js"></script>
+
+  <script>
+    function switchAdminTab(tabName) {
+      document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      if (tabName === 'dashboard') {
+        document.getElementById('admin-dashboard-view').style.display = 'block';
+        document.getElementById('admin-manual-sale-view').style.display = 'none';
+      } else if (tabName === 'manual-sale') {
+        document.getElementById('admin-dashboard-view').style.display = 'none';
+        document.getElementById('admin-manual-sale-view').style.display = 'block';
+        renderManualProducts();
+      }
+    }
+  </script>
 </body>
 </html>

@@ -151,6 +151,12 @@ function startFirestoreLiveListeners() {
     if (kpiCanceladas) kpiCanceladas.textContent = canceladas;
 
     updateAdminDashboard(allSales);
+    
+    // Si estamos en la pestaña de historial, actualizamos la tabla
+    const historicalView = document.getElementById('admin-historical-sales-view');
+    if (historicalView && historicalView.style.display === 'block') {
+        renderHistoricalSales();
+    }
   }, err => console.warn("Aviso en Ventas:", err));
 }
 
@@ -348,6 +354,55 @@ function calculatePhysicalCash() {
     totalCash += (Number(input.value) || 0) * multipliers[index];
   });
   return totalCash;
+}
+
+// ---------------------------------------------------------------------
+// HISTORIAL DE VENTAS (ADMIN)
+// ---------------------------------------------------------------------
+function renderHistoricalSales() {
+    const tbody = document.getElementById('historicalSalesTableBody');
+    if (!tbody) return;
+
+    if (allSales.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No hay ventas registradas.</td></tr>';
+        return;
+    }
+
+    // Ordenar de más reciente a más antigua
+    const sortedSales = [...allSales].sort((a, b) => {
+        const dateA = a.dateISO || a.createdAt || "";
+        const dateB = b.dateISO || b.createdAt || "";
+        return dateB.localeCompare(dateA);
+    });
+
+    // Mostrar las últimas 100 ventas (o las que quieras)
+    const displaySales = sortedSales.slice(0, 100);
+
+    tbody.innerHTML = displaySales.map(sale => {
+        const isCancelled = sale.status === 'cancelled' || sale.cancelled === true;
+        const statusClass = isCancelled ? 'status-cancelled' : 'status-completed';
+        const statusText = isCancelled ? 'Cancelada' : 'Completada';
+        
+        // Formatear la fecha
+        let displayDate = "Sin fecha";
+        if (sale.dateISO) {
+             displayDate = new Date(sale.dateISO).toLocaleDateString('es-UY');
+        } else if (sale.createdAt) {
+             displayDate = new Date(sale.createdAt).toLocaleDateString('es-UY');
+        } else if (sale.date) {
+            displayDate = sale.date; // Fallback a la fecha en texto
+        }
+
+        return `
+        <tr>
+            <td>${displayDate}</td>
+            <td>${escapeHTML(sale.id || 'N/A')}</td>
+            <td style="font-weight: 600;">R$ ${Number(sale.total || 0).toFixed(2)}</td>
+            <td>${escapeHTML(sale.method || 'N/A')}</td>
+            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+        </tr>
+        `;
+    }).join('');
 }
 
 function escapeHTML(str) {
